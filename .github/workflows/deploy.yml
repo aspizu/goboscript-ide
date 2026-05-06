@@ -30,6 +30,7 @@ jobs:
             - name: Setup Rust
               uses: actions-rust-lang/setup-rust-toolchain@v1
               with:
+                  toolchain: nightly
                   rustflags: "-A warnings"
 
             - name: Build Goboscript WASM
