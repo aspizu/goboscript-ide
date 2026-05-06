@@ -1,54 +1,38 @@
-import {Badge} from "@/components/ui/badge"
+import {useObjectURL} from "@/hooks/use-object-url"
 import {cn} from "@/lib/utils"
 import {Editor, FS} from "@/state"
-import {useSignal} from "@preact/signals-react"
 import * as pathlib from "path"
-import {useEffect, useLayoutEffect, useRef} from "react"
+import {useState} from "react"
 
-const EDITABLE: (string | undefined)[] = [".png", ".jpg", ".jpeg", ".bmp"]
+const EDITABLE: (string | undefined)[] = [".png", ".jpg", ".jpeg", ".bmp", ".svg"]
 
 export function AppImageEditor() {
     const path = Editor.getOpenFile()
     const file = FS.getDefaultFile(path)
     const isEditable =
         path && typeof file != "string" && EDITABLE.includes(pathlib.extname(path))
-    const ref = useRef<HTMLImageElement>(null)
-    const objectURL = useSignal<string>()
-    const dimensions = useSignal<{x: number; y: number}>()
-    useEffect(() => {
-        objectURL.value = file && isEditable ? URL.createObjectURL(file) : undefined
-        return () => {
-            if (objectURL.value) URL.revokeObjectURL(objectURL.value)
-        }
-    }, [file, isEditable, objectURL])
-    useLayoutEffect(() => {
-        if (!ref.current) return
-        const el = ref.current
-        el.onload = () => (dimensions.value = {x: el.naturalWidth, y: el.naturalHeight})
-        return () => {
-            el.onload = null
-        }
-    }, [objectURL.value, dimensions])
+    const objectURL = useObjectURL(file instanceof Blob ? file : null)
+    const [dimensions, setDimensions] = useState<{x: number; y: number} | null>(null)
     return (
-        <div
-            className={cn(
-                "relative flex grow flex-col overflow-hidden p-4",
-                !isEditable && "hidden"
-            )}
-        >
-            {dimensions.value && (
-                <Badge className="absolute right-0 bottom-0 z-1 opacity-50">
-                    {dimensions.value.x}x{dimensions.value.y}
-                </Badge>
-            )}
-            {objectURL.value && (
+        <div className={cn("relative grow overflow-hidden", !isEditable && "hidden")}>
+            {objectURL && (
                 <img
-                    ref={ref}
-                    className={cn(
-                        "pixelated h-full w-full object-contain drop-shadow-lg"
-                    )}
-                    src={objectURL.value}
+                    src={objectURL}
+                    className="absolute top-[50%] left-[50%] h-full w-full -translate-x-[50%] -translate-y-[50%] object-contain"
+                    onLoad={(event) => {
+                        if (event.target instanceof HTMLImageElement) {
+                            setDimensions({
+                                x: event.target.naturalWidth,
+                                y: event.target.naturalHeight
+                            })
+                        }
+                    }}
                 />
+            )}
+            {dimensions && (
+                <div className="absolute right-0.25 bottom-0.25 rounded-md bg-black px-1 text-sm font-medium">
+                    {dimensions.x}x{dimensions.y}
+                </div>
             )}
         </div>
     )

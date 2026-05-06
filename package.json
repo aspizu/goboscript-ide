@@ -45,6 +45,7 @@
         "monaco-editor": "^0.52.2",
         "react": "^19.2.5",
         "react-dom": "^19.2.5",
+        "scratch-paint": "github:TurboWarp/scratch-paint",
         "tailwind-merge": "^3.5.0",
         "tailwindcss": "^4.2.4",
         "vite": "^6.4.2"
