@@ -31,7 +31,7 @@ export function AppHeader() {
                 <Button
                     size="icon"
                     className="size-7"
-                    onClick={onFlag}
+                    onClick={() => { void onFlag() }}
                     disabled={loading.value}
                 >
                     {loading.value ?

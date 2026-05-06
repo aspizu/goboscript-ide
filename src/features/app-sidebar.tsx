@@ -155,7 +155,7 @@ function EntryContextMenu({
         if (!isDirectory) return saveAs(FS.getFile(path)!, pathlib.basename(path))
         saveAs(await FS.getDirectoryAsZip(path), pathlib.basename(path) + ".zip")
     }
-    async function onDuplicate() {
+    function onDuplicate() {
         const entry = {path, file: FS.getFile(path)!}
         const extension = pathlib.extname(path)
         const filename = pathlib.basename(path)
@@ -166,7 +166,7 @@ function EntryContextMenu({
             entry.path = `${basename} copy ${i}${extension}`
             i++
         }
-        FS.addFile(entry)
+        void FS.addFile(entry)
     }
     async function onReplace() {
         const files = await filepicker(pathlib.extname(path))
@@ -180,14 +180,31 @@ function EntryContextMenu({
             </ContextMenuTrigger>
             <ContextMenuContent>
                 {!isDirectory && (
-                    <ContextMenuItem onClick={onDuplicate}>Duplicate</ContextMenuItem>
+                    <ContextMenuItem
+                        onClick={() => {
+                            onDuplicate()
+                        }}
+                    >
+                        Duplicate
+                    </ContextMenuItem>
                 )}
                 <ContextMenuItem onClick={() => (isRenameDialogOpen.value = true)}>
                     Rename...
                 </ContextMenuItem>
-                <ContextMenuItem onClick={onSaveAs}>Save As...</ContextMenuItem>
+                <ContextMenuItem
+                    onClick={() => {
+                        void onSaveAs()
+                    }}
+                >
+                    Save As...
+                </ContextMenuItem>
                 {!isDirectory && (
-                    <ContextMenuItem variant="destructive" onClick={onReplace}>
+                    <ContextMenuItem
+                        variant="destructive"
+                        onClick={() => {
+                            void onReplace()
+                        }}
+                    >
                         Replace...
                     </ContextMenuItem>
                 )}

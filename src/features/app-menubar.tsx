@@ -58,7 +58,7 @@ async function onOpenFromLibrary() {
     // TODO: Implement open from library functionality
 }
 
-async function onSaveAs() {
+function onSaveAs() {
     const path = Editor.getOpenFile()
     const entry = FS.getFile(path)
     if (path && entry) saveAs(entry, pathlib.basename(path))
@@ -68,7 +68,7 @@ async function onSaveProjectAs() {
     saveAs(await FS.getDirectoryAsZip(""), "Project.zip")
 }
 
-async function onExportAs() {
+function onExportAs() {
     const project = Project.getProject()
     if (project) saveAs(new Blob([project]), "Project.sb3")
 }
@@ -105,7 +105,7 @@ function ReplaceProjectDialog({open}: {open: Signal<boolean>}) {
                     <Button
                         variant="destructive"
                         disabled={!file.value}
-                        onClick={onReplace}
+                        onClick={() => { void onReplace() }}
                     >
                         Replace
                     </Button>
@@ -122,9 +122,9 @@ export function AppMenubar() {
             <MenubarMenu>
                 <MenubarTrigger>File</MenubarTrigger>
                 <MenubarContent>
-                    <MenubarItem onSelect={onNewFile}>New</MenubarItem>
-                    <MenubarItem onSelect={onOpenFile}>Open...</MenubarItem>
-                    <MenubarItem onSelect={onOpenFromLibrary}>
+                    <MenubarItem onSelect={() => { void onNewFile() }}>New</MenubarItem>
+                    <MenubarItem onSelect={() => { void onOpenFile() }}>Open...</MenubarItem>
+                    <MenubarItem onSelect={() => { void onOpenFromLibrary() }}>
                         Open from Library...
                     </MenubarItem>
                     <MenubarItem onSelect={onSaveAs}>Save As...</MenubarItem>
@@ -134,7 +134,7 @@ export function AppMenubar() {
                     >
                         Open Project...
                     </MenubarItem>
-                    <MenubarItem onSelect={onSaveProjectAs}>
+                    <MenubarItem onSelect={() => { void onSaveProjectAs() }}>
                         Save Project As...
                     </MenubarItem>
                     <MenubarSeparator />

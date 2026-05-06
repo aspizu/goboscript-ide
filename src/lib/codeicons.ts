@@ -1,6 +1,7 @@
 import * as icons from "@icons-pack/react-simple-icons"
+import type {FC} from "react"
 
-const patterns: Record<string, keyof typeof icons> = Object.fromEntries(
+const patterns = Object.fromEntries(
     `
 asm:SiAssemblyscript
 astro:SiAstro
@@ -93,10 +94,12 @@ zsh:SiZsh
         .map((s) => s.trim())
         .filter(Boolean)
         .map((s) => s.split(":"))
-)
+) as unknown as Record<string, keyof typeof icons>
 
-export function getCodeIcon(extension: string): any {
-    if (icons[patterns[extension]]) return icons[patterns[extension]]
+export function getCodeIcon(extension: string): FC | null {
+    if (icons[patterns[extension]]) return icons[patterns[extension]] as unknown as FC
     const name = `Si${extension[0]?.toUpperCase()}${extension.slice(1)}`
-    if (icons[name as keyof typeof icons]) return icons[name as keyof typeof icons]
+    if (icons[name as keyof typeof icons])
+        return icons[name as keyof typeof icons] as unknown as FC
+    return null
 }

@@ -11,6 +11,6 @@ export async function localsignal<U>(
     const stored: {value: U} | null | undefined = await localforage.getItem(key)
     if (stored) initial = stored.value
     const state = signal(initial)
-    state.subscribe((value) => localforage.setItem(key, {value}))
+    state.subscribe((value) => { void localforage.setItem(key, {value}) })
     return state
 }

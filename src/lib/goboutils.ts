@@ -67,7 +67,7 @@ const worker = new Worker({name: "goboscript"})
 
 export function build(fs: goboscript.MemFS): Promise<goboscript.Build> {
     return new Promise((resolve) => {
-        worker.onmessage = (event) => resolve(event.data)
+        worker.onmessage = (event) => resolve(event.data as goboscript.Build)
         worker.postMessage(fs)
     })
 }

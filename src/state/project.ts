@@ -36,12 +36,12 @@ export async function buildProject() {
     goboutils.updateParser(fs)
     const files: Record<string, {inner: string}> = {}
     for (let [path, file] of fs) {
-        if (path.endsWith(".gs")) file += "\n"
+        if (path.endsWith(".gs") && typeof file === "string") file += "\n"
         const inner = base64.encode(typeof file == "string" ? new Blob([file]) : file)
         files[`project/${path}`] = {inner: await inner}
     }
     if (!("project/stage.gs" in files)) return
-    const build = await goboutils.build({files} as any)
+    const build = await goboutils.build({files} as unknown as goboscript.MemFS)
     monaco.value.editor.removeAllMarkers("goboscript")
     const {project, sprites_diagnostics, stage_diagnostics} = build.artifact
     const markers = stage_diagnostics.diagnostics.map((diagnostic) =>
@@ -69,7 +69,7 @@ export async function buildProject() {
         if (!model) continue
         monaco.value.editor.setModelMarkers(model, "goboscript", markers)
     }
-    const file = await base64.decode(build.file as any).arrayBuffer()
+    const file = await base64.decode(build.file as unknown as string).arrayBuffer()
     batch(() => {
         artifact.value = {...build.artifact, file}
         markers.sort((a, b) => a.uri.path.localeCompare(b.uri.path))

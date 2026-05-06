@@ -1,6 +1,4 @@
-// @ts-check
 import eslint from "@eslint/js"
-import banRelativeImports from "eslint-plugin-ban-relative-imports"
 import reactHooks from "eslint-plugin-react-hooks"
 import globals from "globals"
 import tseslint from "typescript-eslint"
@@ -8,16 +6,20 @@ import tseslint from "typescript-eslint"
 export default tseslint.config([
     {ignores: ["dist"]},
     {
-        extends: [eslint.configs.recommended, tseslint.configs.recommended],
+        extends: [eslint.configs.recommended, tseslint.configs.recommendedTypeChecked],
         files: ["src/**/*.{ts,tsx}"],
-        languageOptions: {ecmaVersion: "latest", globals: globals.browser},
+        languageOptions: {
+            ecmaVersion: "latest",
+            globals: globals.browser,
+            parserOptions: {
+                project: "./tsconfig.app.json"
+            }
+        },
         plugins: {
-            "react-hooks": reactHooks,
-            "ban-relative-imports": banRelativeImports
+            "react-hooks": reactHooks
         },
         rules: {
             ...reactHooks.configs.recommended.rules,
-            "ban-relative-imports/ban-relative-imports": "error",
             "func-style": ["error", "declaration"],
             "@typescript-eslint/no-unused-vars": "off",
             "@typescript-eslint/no-explicit-any": "off",

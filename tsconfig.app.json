@@ -14,6 +14,7 @@
         "moduleDetection": "force",
         "noEmit": true,
         "jsx": "react-jsx",
+        "types": ["vite", "node", "@turbowarp/types-tw"],
 
         /* Linting */
         "strict": true,
@@ -23,7 +24,6 @@
         "noFallthroughCasesInSwitch": true,
         "noUncheckedSideEffectImports": true,
 
-        "baseUrl": ".",
         "paths": {
             "@/*": ["./src/*"]
         }

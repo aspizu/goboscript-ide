@@ -23,7 +23,10 @@ export function close() {
 }
 
 export function onMount($editor: any, $monaco: any) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     editor.value = $editor
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     monaco.value = $monaco
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     syntax.register($monaco)
 }
