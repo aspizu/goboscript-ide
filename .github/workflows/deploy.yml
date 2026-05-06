@@ -36,7 +36,7 @@ jobs:
             - name: Build Goboscript WASM
               run: |
                   cd goboscript
-                  wasm-pack build --release
+                  wasm-pack build --release 2>&1 | grep -v "not a recognized feature"
 
             - name: Upload Goboscript WASM Artifact
               uses: actions/upload-artifact@v4
