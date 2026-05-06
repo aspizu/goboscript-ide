@@ -43,6 +43,7 @@
         "localforage": "^1.10.0",
         "lucide-react": "^0.511.0",
         "monaco-editor": "^0.52.2",
+        "radix-ui": "^1.4.3",
         "react": "^19.2.5",
         "react-dom": "^19.2.5",
         "scratch-paint": "github:TurboWarp/scratch-paint",

@@ -1,8 +1,7 @@
-import {Button} from "@/components/ui/button"
 import {cn} from "@/lib/utils"
 import {Console, Editor, FS} from "@/state"
 import {editor} from "@/state/editor"
-import {InfoIcon, ListXIcon, TriangleAlertIcon, XCircleIcon} from "lucide-react"
+import {InfoIcon, TriangleAlertIcon, XCircleIcon} from "lucide-react"
 import {useLayoutEffect, useRef} from "react"
 
 function Message({severity, message, path, lineNumber}: Console.Message) {
@@ -47,7 +46,7 @@ function Message({severity, message, path, lineNumber}: Console.Message) {
     )
 }
 
-export function AppConsole() {
+export function AppConsolePane() {
     const ref = useRef<HTMLDivElement>(null)
     const messages = Console.getMessages()
     useLayoutEffect(() => {
@@ -56,17 +55,6 @@ export function AppConsole() {
     }, [messages])
     return (
         <div className="flex flex-col gap-1 overflow-y-scroll" ref={ref}>
-            <div className="bg-background sticky top-0 flex items-center border-b px-1 pb-2 text-xs font-semibold shadow-lg">
-                Console
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={Console.removeAllMessages}
-                    className="ml-auto size-6"
-                >
-                    <ListXIcon />
-                </Button>
-            </div>
             <div className="flex flex-col gap-1">
                 {messages.map((message, i) => (
                     <Message key={i} {...message} />
