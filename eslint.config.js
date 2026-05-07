@@ -9,10 +9,12 @@ export default tseslint.config([
         extends: [eslint.configs.recommended, tseslint.configs.recommendedTypeChecked],
         files: ["src/**/*.{ts,tsx}"],
         languageOptions: {
+            parser: tseslint.parser,
             ecmaVersion: "latest",
             globals: globals.browser,
             parserOptions: {
-                project: "./tsconfig.app.json"
+                project: "./tsconfig.app.json",
+                tsconfigRootDir: import.meta.dirname
             }
         },
         plugins: {
