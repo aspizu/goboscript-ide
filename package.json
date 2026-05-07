@@ -4,7 +4,7 @@
         "build": "node --max-old-space-size=4096 node_modules/vite/bin/vite build",
         "preview": "vite preview",
         "fmt": "prettier -uwu .",
-        "check": "tsgo --noEmit && eslint --fix .",
+        "check": "tsgo -p tsconfig.app.json --noEmit && eslint --fix .",
         "wasm-debug": "cd goboscript; wasm-pack build --debug",
         "wasm-release": "cd goboscript; wasm-pack build --release"
     },
@@ -21,6 +21,7 @@
     },
     "type": "module",
     "dependencies": {
+        "@ai-sdk/openai": "^3.0.62",
         "@fontsource-variable/inter": "^5.2.8",
         "@fontsource/cascadia-code": "^5.2.3",
         "@icons-pack/react-simple-icons": "^12.9.0",
@@ -43,12 +44,15 @@
         "localforage": "^1.10.0",
         "lucide-react": "^0.511.0",
         "monaco-editor": "^0.52.2",
+        "openai": "^6.36.0",
         "radix-ui": "^1.4.3",
         "react": "^19.2.5",
         "react-dom": "^19.2.5",
         "scratch-paint": "github:TurboWarp/scratch-paint",
+        "streamdown": "^2.5.0",
         "tailwind-merge": "^3.5.0",
         "tailwindcss": "^4.2.4",
+        "typescript": "^6.0.3",
         "vite": "^6.4.2"
     },
     "devDependencies": {

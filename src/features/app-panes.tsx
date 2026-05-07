@@ -1,6 +1,6 @@
 import {Button} from "@/components/ui/button"
 import {cn} from "@/lib/utils"
-import {Console} from "@/state"
+import {Chat, Console} from "@/state"
 import {ListXIcon} from "lucide-react"
 import {useState, type ReactNode} from "react"
 import {AppChatPane} from "./panes/app-chat-pane"
@@ -34,7 +34,7 @@ export function AppPanes() {
     ).length
     const [tab, setTab] = useState<Tab>("console")
     return (
-        <div className="flex flex-col gap-2 overflow-hidden">
+        <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-hidden">
             <div className="flex gap-1">
                 <TabButton tab={tab} value="console" setTab={setTab}>
                     Console
@@ -53,7 +53,17 @@ export function AppPanes() {
                         variant="ghost"
                         size="icon"
                         onClick={Console.removeAllMessages}
-                        className="ml-auto size-6"
+                        className="size-6"
+                    >
+                        <ListXIcon />
+                    </Button>
+                )}
+                {tab == "chat" && (
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={Chat.clearMessages}
+                        className="size-6"
                     >
                         <ListXIcon />
                     </Button>

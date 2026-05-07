@@ -1,0 +1,5 @@
+{
+    "name": "goboscript-ide-proxy",
+    "main": "proxy-worker.ts",
+    "compatibility_date": "2025-01-01"
+}
