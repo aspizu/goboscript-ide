@@ -105,7 +105,9 @@ function ReplaceProjectDialog({open}: {open: Signal<boolean>}) {
                     <Button
                         variant="destructive"
                         disabled={!file.value}
-                        onClick={() => { void onReplace() }}
+                        onClick={() => {
+                            void onReplace()
+                        }}
                     >
                         Replace
                     </Button>
@@ -122,9 +124,25 @@ export function AppMenubar() {
             <MenubarMenu>
                 <MenubarTrigger>File</MenubarTrigger>
                 <MenubarContent>
-                    <MenubarItem onSelect={() => { void onNewFile() }}>New</MenubarItem>
-                    <MenubarItem onSelect={() => { void onOpenFile() }}>Open...</MenubarItem>
-                    <MenubarItem onSelect={() => { void onOpenFromLibrary() }}>
+                    <MenubarItem
+                        onSelect={() => {
+                            void onNewFile()
+                        }}
+                    >
+                        New
+                    </MenubarItem>
+                    <MenubarItem
+                        onSelect={() => {
+                            void onOpenFile()
+                        }}
+                    >
+                        Open...
+                    </MenubarItem>
+                    <MenubarItem
+                        onSelect={() => {
+                            void onOpenFromLibrary()
+                        }}
+                    >
                         Open from Library...
                     </MenubarItem>
                     <MenubarItem onSelect={onSaveAs}>Save As...</MenubarItem>
@@ -134,7 +152,11 @@ export function AppMenubar() {
                     >
                         Open Project...
                     </MenubarItem>
-                    <MenubarItem onSelect={() => { void onSaveProjectAs() }}>
+                    <MenubarItem
+                        onSelect={() => {
+                            void onSaveProjectAs()
+                        }}
+                    >
                         Save Project As...
                     </MenubarItem>
                     <MenubarSeparator />
@@ -148,7 +170,7 @@ export function AppMenubar() {
                 <MenubarContent>
                     <MenubarItem asChild>
                         <a
-                            href="https://aspiz.uk/goboscript/docs/getting-started/basic-examples"
+                            href="https://aspiz.uk/goboscript/docs/getting-started/basic-examples.html"
                             target="_blank"
                             rel="noopener noreferrer"
                         >
