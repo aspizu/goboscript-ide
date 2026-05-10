@@ -1,6 +1,7 @@
 import {localsignal} from "@/lib/localsignal"
 import {monaco} from "@/state/editor"
 import JSZip from "jszip"
+import * as pathlib from "node:path"
 
 export type Entry = string | Blob
 
@@ -11,7 +12,7 @@ const fs = await localsignal<Record<string, Entry>>("fs", {
     "goboscript.toml": `# goboscript project configuration\n\n# The target number of frames per second (FPS)\nframe_rate = 30\n\n# Maximum number of clones that can exist simultaneously\nmax_clones = 300.0\n\n# If true, removes various limits unrelated to clones or rendering\nno_miscellaneous_limits = false\n\n# If true, disables sprite fencing (sprites can move beyond stage borders)\nno_sprite_fencing = false\n\n# If true, enables frame interpolation for smoother animations\nframe_interpolation = false\n\n# If true, improves pen rendering quality (may affect performance)\nhigh_quality_pen = false\n\n# Width of the stage in pixels\nstage_width = 480\n\n# Height of the stage in pixels\nstage_height = 360\n`
 })
 
-const EDITABLE_TYPES: (string | undefined)[] = "gs, json, svg, toml, txt".split(/,\s*/)
+const EDITABLE_TYPES = [".gs", ".json", ".svg", ".toml", ".txt"]
 
 function syncWithMonaco() {
     const files = {...fs.value}
@@ -24,7 +25,7 @@ function syncWithMonaco() {
 function syncToMonaco() {
     for (const model of monaco.value.editor.getModels()) {
         const entry = fs.value[model.uri.path]
-        if (entry && typeof entry == "string") model.setValue(entry)
+        if (typeof entry === "string") model.setValue(entry)
     }
 }
 
@@ -50,11 +51,17 @@ export function getFiles() {
 }
 
 export function getFile(path?: string): Entry | undefined {
-    return path ? syncWithMonaco()[path] : undefined
+    if (path === undefined) {
+        return undefined
+    }
+    return syncWithMonaco()[path]
 }
 
 export function getDefaultFile(path?: string): Entry | undefined {
-    return path ? fs.value[path] : undefined
+    if (path === undefined) {
+        return undefined
+    }
+    return fs.value[path]
 }
 
 export function exists(path: string) {
@@ -64,7 +71,10 @@ export function exists(path: string) {
 export async function replaceFiles(newFiles: {path: string; file: Entry}[]) {
     const files: typeof fs.value = {}
     for (let {path, file} of newFiles) {
-        if (typeof file != "string" && EDITABLE_TYPES.includes(path.split(".").pop())) {
+        if (
+            typeof file !== "string" &&
+            EDITABLE_TYPES.includes(pathlib.extname(path))
+        ) {
             file = await file.text()
         }
         files[path] = file
@@ -76,7 +86,10 @@ export async function replaceFiles(newFiles: {path: string; file: Entry}[]) {
 export async function addFile(...newFiles: {path: string; file: Entry}[]) {
     const files = syncWithMonaco()
     for (let {path, file} of newFiles) {
-        if (typeof file != "string" && EDITABLE_TYPES.includes(path.split(".").pop())) {
+        if (
+            typeof file !== "string" &&
+            EDITABLE_TYPES.includes(pathlib.extname(path))
+        ) {
             file = await file.text()
         }
         files[path] = file
@@ -119,7 +132,7 @@ export function renameDirectory(oldDir: string, newDir: string) {
 }
 
 export function getDirectoryAsZip(dir: string): Promise<Blob> {
-    if (!dir.startsWith("/") && dir != "") dir += "/"
+    if (!dir.startsWith("/") && dir !== "") dir += "/"
     const zip = new JSZip()
     const files = syncWithMonaco()
     for (const path in files) {
@@ -131,7 +144,7 @@ export function getDirectoryAsZip(dir: string): Promise<Blob> {
 
 export async function replaceFile(path: string, file: Entry) {
     const files = syncWithMonaco()
-    if (typeof file != "string" && EDITABLE_TYPES.includes(path.split(".").pop())) {
+    if (typeof file !== "string" && EDITABLE_TYPES.includes(pathlib.extname(path))) {
         file = await file.text()
     }
     files[path] = file
@@ -139,4 +152,6 @@ export async function replaceFile(path: string, file: Entry) {
     syncToMonaco()
 }
 
-setInterval(() => (fs.value = syncWithMonaco()), 1000 * 60)
+setInterval(() => {
+    fs.value = syncWithMonaco()
+}, 1000 * 60)

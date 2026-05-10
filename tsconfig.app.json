@@ -14,7 +14,7 @@
         "moduleDetection": "force",
         "noEmit": true,
         "jsx": "react-jsx",
-        "types": ["vite", "node", "@turbowarp/types-tw"],
+        "types": ["vite", "node", "./node_modules/@turbowarp/types/index.d.ts"],
 
         /* Linting */
         "strict": true,

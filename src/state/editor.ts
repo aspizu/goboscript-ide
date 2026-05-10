@@ -1,3 +1,7 @@
+// oxlint-disable typescript/no-unsafe-argument
+// oxlint-disable typescript/no-unsafe-assignment
+// oxlint-disable typescript/no-unsafe-type-assertion
+
 import {localsignal} from "@/lib/localsignal"
 import * as syntax from "@/lib/syntax"
 import type {useMonaco} from "@monaco-editor/react"
@@ -15,7 +19,9 @@ export function getOpenFile() {
 
 export function setOpenFile(path: string) {
     openFile.value = path
-    setTimeout(() => editor.value.focus(), 0)
+    setTimeout(() => {
+        editor.value.focus()
+    }, 0)
 }
 
 export function close() {
@@ -23,10 +29,7 @@ export function close() {
 }
 
 export function onMount($editor: any, $monaco: any) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     editor.value = $editor
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     monaco.value = $monaco
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     syntax.register($monaco)
 }

@@ -79,13 +79,13 @@ export function getSourceLocation(
 ) {
     let sprite: goboscript.Sprite | undefined = project.stage
     if (targetName != "Stage") sprite = project.sprites.get(targetName)
-    if (!sprite) return
+    if (!sprite) return undefined
     let diagnostics: goboscript.SpriteDiagnostics | undefined = stage_diagnostics
     if (targetName != "Stage") diagnostics = sprites_diagnostics.get(targetName)
-    if (!diagnostics) return
+    if (!diagnostics) return undefined
     const {translation_unit, debug_info} = diagnostics
     const span = debug_info.blocks.get(`"${blockID}"`)
-    if (!span) return
+    if (!span) return undefined
     const [start, incStart] = translatePosition(translation_unit, span.start)
     return [convertPosition(incStart, start), incStart] as const
 }

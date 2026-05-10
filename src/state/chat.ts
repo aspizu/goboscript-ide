@@ -2,8 +2,6 @@ import {streamChat, type ChatMessage} from "@/lib/chatbot"
 import {localsignal} from "@/lib/localsignal"
 import {signal} from "@preact/signals-react"
 
-export const CHATBOT_URL = "https://goboscript-ide-proxy.aspizu.workers.dev"
-
 export const messages = await localsignal<ChatMessage[]>("chat", [])
 export const loading = signal(false)
 
@@ -28,14 +26,20 @@ export async function sendMessage(content: string): Promise<undefined> {
         for await (const chunk of streamChat(conversation)) {
             const msgs = getMessages()
             const last = msgs[msgs.length - 1]
-            messages.value = [...msgs.slice(0, -1), {role: "assistant", content: last.content + chunk}]
+            messages.value = [
+                ...msgs.slice(0, -1),
+                {role: "assistant", content: last.content + chunk}
+            ]
         }
     } catch (e) {
         console.error("Chat error:", e)
         const msgs = getMessages()
         const last = msgs[msgs.length - 1]
         if (last?.role === "assistant" && last.content === "") {
-            messages.value = [...msgs.slice(0, -1), {role: "assistant", content: "Error: failed to get response."}]
+            messages.value = [
+                ...msgs.slice(0, -1),
+                {role: "assistant", content: "Error: failed to get response."}
+            ]
         } else {
             addMessage({role: "assistant", content: "Error: failed to get response."})
         }

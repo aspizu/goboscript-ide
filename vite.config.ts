@@ -1,3 +1,4 @@
+import babel from "@rolldown/plugin-babel"
 import tailwindcss from "@tailwindcss/vite"
 import react from "@vitejs/plugin-react"
 import path from "path"
@@ -9,10 +10,9 @@ import wasm from "vite-plugin-wasm"
 export default defineConfig({
     base: "/goboscript/ide/",
     plugins: [
-        react({
-            babel: {
-                plugins: [["module:@preact/signals-react-transform", {mode: "all"}]]
-            }
+        react(),
+        babel({
+            plugins: [["module:@preact/signals-react-transform", {mode: "all"}]]
         }),
         tailwindcss(),
         wasm(),

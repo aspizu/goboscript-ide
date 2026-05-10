@@ -5,7 +5,7 @@ export function useObjectURL(blob: Blob | null) {
     useEffect(() => {
         if (blob === null) {
             setObjectURL(null)
-            return
+            return undefined
         }
         const objectURL = URL.createObjectURL(blob)
         setObjectURL(objectURL)
