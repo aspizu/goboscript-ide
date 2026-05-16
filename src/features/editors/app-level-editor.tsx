@@ -41,12 +41,12 @@ const TILES: Tile[] = [
     {
         char: ".",
         label: "Empty",
-        className: "bg-zinc-950"
+        className: "bg-sky-50 dark:bg-zinc-950"
     },
     {
         char: "#",
         label: "Solid",
-        className: "bg-zinc-200"
+        className: "bg-zinc-300 dark:bg-zinc-200"
     },
     {
         char: "~",
@@ -315,17 +315,17 @@ export function AppLevelEditor() {
     return (
         <div
             className={cn(
-                "flex grow overflow-hidden bg-zinc-950 text-zinc-100",
+                "flex grow overflow-hidden bg-background text-foreground dark:bg-zinc-950 dark:text-zinc-100",
                 !isEditable && "hidden"
             )}
         >
-            <aside className="flex w-56 shrink-0 flex-col gap-3 border-r border-zinc-800 bg-zinc-900/90 p-3">
+            <aside className="flex w-56 shrink-0 flex-col gap-3 border-r border-border bg-sidebar p-3 dark:border-zinc-800 dark:bg-zinc-900/90">
                 <div className="flex items-center gap-2 text-sm font-semibold">
                     <Grid2X2 className="size-4" />
                     Level Grid
                 </div>
                 <Tabs defaultValue="tiles" className="min-h-0 grow">
-                    <TabsList className="grid w-full grid-cols-2 bg-zinc-950">
+                    <TabsList className="grid w-full grid-cols-2 bg-muted dark:bg-zinc-950">
                         <TabsTrigger value="tiles">
                             <Paintbrush className="size-3.5" />
                             Tiles
@@ -337,7 +337,7 @@ export function AppLevelEditor() {
                     </TabsList>
                     <TabsContent value="tiles" className="flex min-h-0 flex-col gap-3">
                         <div className="grid grid-cols-2 gap-2">
-                            <label className="space-y-1 text-xs text-zinc-400">
+                            <label className="space-y-1 text-xs text-muted-foreground dark:text-zinc-400">
                                 Rows
                                 <Input
                                     type="number"
@@ -349,7 +349,7 @@ export function AppLevelEditor() {
                                     }}
                                 />
                             </label>
-                            <label className="space-y-1 text-xs text-zinc-400">
+                            <label className="space-y-1 text-xs text-muted-foreground dark:text-zinc-400">
                                 Columns
                                 <Input
                                     type="number"
@@ -375,10 +375,10 @@ export function AppLevelEditor() {
                                         title={`${tile.label} (${tile.char})`}
                                         aria-label={`${tile.label} (${tile.char})`}
                                         className={cn(
-                                            "grid aspect-square place-items-center rounded-md border bg-zinc-950 p-1 outline-none transition hover:border-zinc-400 hover:bg-zinc-800 focus-visible:ring-2 focus-visible:ring-white",
+                                            "grid aspect-square place-items-center rounded-md border bg-card p-1 outline-none transition hover:border-primary/50 hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring dark:bg-zinc-950 dark:hover:border-zinc-400 dark:hover:bg-zinc-800 dark:focus-visible:ring-white",
                                             selectedTile === tile.char
-                                                ? "border-white shadow-[0_0_0_1px_rgba(255,255,255,0.6)]"
-                                                : "border-zinc-700"
+                                                ? "border-primary shadow-[0_0_0_1px_var(--primary)] dark:border-white dark:shadow-[0_0_0_1px_rgba(255,255,255,0.6)]"
+                                                : "border-border dark:border-zinc-700"
                                         )}
                                         onClick={() => {
                                             setSelectedTile(tile.char)
@@ -396,7 +396,7 @@ export function AppLevelEditor() {
                         <Button
                             type="button"
                             variant="outline"
-                            className="mt-auto h-8 justify-center border-zinc-700 bg-zinc-900 px-2 hover:bg-zinc-800"
+                            className="mt-auto h-8 justify-center border-border bg-card px-2 hover:bg-accent dark:border-zinc-700 dark:bg-zinc-900 dark:hover:bg-zinc-800"
                             onClick={() => {
                                 setSelectedTile(EMPTY_TILE)
                             }}
@@ -417,22 +417,22 @@ export function AppLevelEditor() {
                             return (
                                 <label
                                     key={char}
-                                    className="grid gap-1 rounded-md border border-zinc-800 bg-zinc-950/60 p-2 text-xs text-zinc-400"
+                                    className="grid gap-1 rounded-md border border-border bg-card p-2 text-xs text-muted-foreground dark:border-zinc-800 dark:bg-zinc-950/60 dark:text-zinc-400"
                                 >
                                     <span className="flex items-center gap-2">
-                                        <span className="grid size-7 place-items-center rounded border border-zinc-700 bg-zinc-900 font-mono text-zinc-100">
+                                        <span className="grid size-7 place-items-center rounded border border-border bg-muted font-mono text-foreground dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100">
                                             {char}
                                         </span>
                                         Costume
                                         {costume && (
-                                            <span className="ml-auto size-7 overflow-hidden rounded border border-zinc-700 bg-zinc-900 p-0.5">
+                                            <span className="ml-auto size-7 overflow-hidden rounded border border-border bg-muted p-0.5 dark:border-zinc-700 dark:bg-zinc-900">
                                                 <CostumeImage costume={costume} />
                                             </span>
                                         )}
                                     </span>
                                     <select
                                         value={costumeMappings[char] ?? ""}
-                                        className="border-input bg-background h-9 min-w-0 rounded-md border px-2 text-sm text-zinc-100 outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                                        className="border-input bg-background h-9 min-w-0 rounded-md border px-2 text-sm text-foreground outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:text-zinc-100"
                                         onChange={(event) => {
                                             setCostumeMapping(char, event.target.value)
                                         }}
@@ -451,18 +451,18 @@ export function AppLevelEditor() {
                 </Tabs>
             </aside>
             <main className="flex min-h-0 min-w-0 grow flex-col">
-                <div className="flex h-10 shrink-0 items-center gap-2 border-b border-zinc-800 px-3 text-xs text-zinc-400">
+                <div className="flex h-10 shrink-0 items-center gap-2 border-b border-border bg-card px-3 text-xs text-muted-foreground dark:border-zinc-800 dark:bg-transparent dark:text-zinc-400">
                     <MousePointer2 className="size-3.5" />
                     Paint by clicking or dragging across cells.
                     <span className="ml-auto font-mono">
                         {grid[0]?.length ?? 0}x{grid.length}
                     </span>
-                    <div className="flex items-center overflow-hidden rounded-md border border-zinc-800 bg-zinc-900">
+                    <div className="flex items-center overflow-hidden rounded-md border border-border bg-background dark:border-zinc-800 dark:bg-zinc-900">
                         <Button
                             type="button"
                             variant="ghost"
                             size="icon"
-                            className="size-7 rounded-none text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100"
+                            className="size-7 rounded-none text-muted-foreground hover:bg-accent hover:text-foreground dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
                             onClick={zoomOut}
                             disabled={zoom <= MIN_ZOOM}
                             aria-label="Zoom out"
@@ -470,14 +470,14 @@ export function AppLevelEditor() {
                         >
                             <ZoomOut className="size-3.5" />
                         </Button>
-                        <span className="w-10 border-x border-zinc-800 text-center font-mono">
+                        <span className="w-10 border-x border-border text-center font-mono dark:border-zinc-800">
                             {zoom}px
                         </span>
                         <Button
                             type="button"
                             variant="ghost"
                             size="icon"
-                            className="size-7 rounded-none text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100"
+                            className="size-7 rounded-none text-muted-foreground hover:bg-accent hover:text-foreground dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
                             onClick={zoomIn}
                             disabled={zoom >= MAX_ZOOM}
                             aria-label="Zoom in"
@@ -490,7 +490,7 @@ export function AppLevelEditor() {
                 <div
                     ref={viewportRef}
                     className={cn(
-                        "relative min-h-0 min-w-0 grow overflow-hidden overscroll-contain bg-zinc-950",
+                        "relative min-h-0 min-w-0 grow overflow-hidden overscroll-contain bg-sky-50 dark:bg-zinc-950",
                         isPanning ? "cursor-grabbing" : "cursor-grab"
                     )}
                     onPointerDown={startPanning}
@@ -509,7 +509,7 @@ export function AppLevelEditor() {
                     onWheel={scrollViewport}
                 >
                     <div
-                        className="absolute rounded-md border border-zinc-700 bg-zinc-900 shadow-2xl shadow-black/40"
+                        className="absolute rounded-md border border-border bg-white shadow-2xl shadow-sky-200/50 dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-black/40"
                         style={{
                             left: offset.x,
                             top: offset.y,
@@ -530,7 +530,7 @@ export function AppLevelEditor() {
                                         title={`${tile.label} (${tile.char})`}
                                         data-level-tile
                                         className={cn(
-                                            "absolute grid place-items-center border-r border-b border-zinc-800 font-mono text-[10px] text-black/70 outline-none transition-transform hover:scale-110 hover:ring-2 hover:ring-white/70 focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-white",
+                                            "absolute grid place-items-center border-r border-b border-sky-100 font-mono text-[10px] text-black/70 outline-none transition-transform hover:scale-110 hover:ring-2 hover:ring-primary/60 focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-ring dark:border-zinc-800 dark:hover:ring-white/70 dark:focus-visible:ring-white",
                                             tile.className
                                         )}
                                         style={{

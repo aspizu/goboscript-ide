@@ -58,12 +58,13 @@ function getFileIcon(path: string) {
 }
 
 function getFileColor(path: string) {
-    if (path == "stage.gs") return cn("text-cyan-200")
-    if (/^[^/]*\.gs$/.test(path)) return cn("text-blue-200")
-    if (path == "goboscript.toml") return cn("text-green-200")
-    if (path.endsWith(".gs")) return cn("text-red-200")
-    if (path.endsWith(".svg")) return cn("text-purple-200")
-    if (/\.(bmp|png|jpg|jpeg)$/.test(path)) return cn("text-emerald-200")
+    if (path == "stage.gs") return cn("text-cyan-600 dark:text-cyan-200")
+    if (/^[^/]*\.gs$/.test(path)) return cn("text-blue-600 dark:text-blue-200")
+    if (path == "goboscript.toml") return cn("text-green-600 dark:text-green-200")
+    if (path.endsWith(".gs")) return cn("text-red-600 dark:text-red-200")
+    if (path.endsWith(".svg")) return cn("text-purple-600 dark:text-purple-200")
+    if (/\.(bmp|png|jpg|jpeg)$/.test(path))
+        return cn("text-emerald-600 dark:text-emerald-200")
     return cn("text-muted-foreground")
 }
 
