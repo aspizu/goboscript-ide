@@ -77,9 +77,11 @@ export async function buildProject() {
             (marker) =>
                 ({
                     severity:
-                        marker.severity == MarkerSeverity.Error ? "error"
-                        : marker.severity == MarkerSeverity.Warning ? "warn"
-                        : "log",
+                        marker.severity == MarkerSeverity.Error
+                            ? "error"
+                            : marker.severity == MarkerSeverity.Warning
+                              ? "warn"
+                              : "log",
                     message: marker.message,
                     path: marker.uri.path,
                     lineNumber: marker.startLineNumber

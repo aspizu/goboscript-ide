@@ -31,12 +31,12 @@ export function AppHeader() {
                 <Button
                     size="icon"
                     className="size-7"
-                    onClick={() => { void onFlag() }}
+                    onClick={() => {
+                        void onFlag()
+                    }}
                     disabled={loading.value}
                 >
-                    {loading.value ?
-                        <Spinner size="small" />
-                    :   <PlayIcon />}
+                    {loading.value ? <Spinner size="small" /> : <PlayIcon />}
                 </Button>
                 <Button
                     size="icon"

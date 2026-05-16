@@ -7,9 +7,10 @@
 Code editor with integrated project player for creating goboscript projects quickly.
 
 #### Built with
- - [**goboscript**](https://github.com/aspizu/goboscript)
- - [**TurboWarp Scaffolding**](https://github.com/TurboWarp/scaffolding)
- - [**Monaco Editor**](https://github.com/microsoft/monaco-editor)
+
+- [**goboscript**](https://github.com/aspizu/goboscript)
+- [**TurboWarp Scaffolding**](https://github.com/TurboWarp/scaffolding)
+- [**Monaco Editor**](https://github.com/microsoft/monaco-editor)
 
 goboscript IDE is a React application that uses [`wasm-pack`](https://github.com/rustwasm/wasm-pack) to run the goboscript compiler in the browser.
 
@@ -27,4 +28,3 @@ cd ..
 bun install
 bun run dev
 ```
-

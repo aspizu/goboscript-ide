@@ -16,14 +16,14 @@ const EDITABLE_TYPES = [".gs", ".json", ".svg", ".toml", ".txt"]
 
 function syncWithMonaco() {
     const files = {...fs.value}
-    for (const model of monaco.value.editor.getModels()) {
+    for (const model of monaco.value?.editor.getModels() ?? []) {
         if (model.uri.path in files) files[model.uri.path] = model.getValue()
     }
     return files
 }
 
 function syncToMonaco() {
-    for (const model of monaco.value.editor.getModels()) {
+    for (const model of monaco.value?.editor.getModels() ?? []) {
         const entry = fs.value[model.uri.path]
         if (typeof entry === "string") model.setValue(entry)
     }

@@ -14,10 +14,10 @@ export function App() {
                 <AppHeader />
                 <div
                     className={cn(
-                        "grid grow overflow-hidden transition-all duration-200 ease-linear",
-                        panelOpen.value ?
-                            "grid-cols-[auto_calc(480px+var(--spacing)*2)]"
-                        :   "grid-cols-[auto_0px]"
+                        "grid min-h-0 min-w-0 grow overflow-hidden transition-all duration-200 ease-linear",
+                        panelOpen.value
+                            ? "grid-cols-[auto_calc(480px+var(--spacing)*2)]"
+                            : "grid-cols-[auto_0px]"
                     )}
                 >
                     <AppEditor />
