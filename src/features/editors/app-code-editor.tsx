@@ -2,7 +2,6 @@ import {cn} from "@/lib/utils"
 import {Editor, FS} from "@/state"
 import {Editor as MonacoEditor, type EditorProps} from "@monaco-editor/react"
 import * as $monaco from "monaco-editor"
-import * as pathlib from "path"
 
 const options: $monaco.editor.IStandaloneEditorConstructionOptions = {
     fontFamily: "Cascadia Code",
@@ -16,8 +15,7 @@ const options: $monaco.editor.IStandaloneEditorConstructionOptions = {
 export function AppCodeEditor(props: EditorProps) {
     const path = Editor.getOpenFile()
     const file = FS.getDefaultFile(path)
-    const isEditable =
-        typeof file == "string" && (!path || pathlib.extname(path) !== ".level")
+    const isEditable = typeof file == "string"
     return (
         <div className={cn("grow overflow-hidden", !isEditable && "hidden")}>
             <MonacoEditor

@@ -43,9 +43,9 @@ export function UploadBox({
         <div
             className={cn(
                 "flex aspect-video items-center justify-center rounded-lg border border-dashed text-center transition-colors",
-                file.value
-                    ? "border-primary bg-primary/10"
-                    : "border-muted-foreground/50 hover:border-muted-foreground/80",
+                file.value ?
+                    "border-primary bg-primary/10"
+                :   "border-muted-foreground/50 hover:border-muted-foreground/80",
                 className
             )}
             onDrop={handleDrop}
@@ -60,7 +60,7 @@ export function UploadBox({
                 onChange={handleInputChange}
             />
 
-            {file.value ? (
+            {file.value ?
                 <div className="flex flex-col items-center gap-4">
                     <div className="flex items-center gap-2">
                         <span className="font-medium">{file.value.name}</span>
@@ -77,8 +77,7 @@ export function UploadBox({
                         Replace File
                     </Button>
                 </div>
-            ) : (
-                <div className="flex flex-col items-center gap-4">
+            :   <div className="flex flex-col items-center gap-4">
                     <FolderOpenIcon className="text-muted-foreground size-7" />
                     <div className="space-y-1">
                         <p className="font-medium">Drag and drop your file here</p>
@@ -90,7 +89,7 @@ export function UploadBox({
                         Select File
                     </Button>
                 </div>
-            )}
+            }
         </div>
     )
 }

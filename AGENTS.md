@@ -1,4 +1,4 @@
-always run `pnpm run check` to ensure code quality
+always run `bun run check` to ensure code quality
 always prefer absolute imports like `@/components/ui/Button`
 you may not suppress eslint rules or typescript errors
 functions must either be 100% pure, or be 100% side-effectful

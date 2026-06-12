@@ -1,16 +1,4 @@
 {
-    "name": "goboscript-ide",
-    "version": "0.1.0",
-    "private": true,
-    "description": "the goboscript IDE",
-    "homepage": "https://aspiz.uk/goboscript/ide",
-    "author": {
-        "name": "Priyanshu Dangare",
-        "email": "aspizu@protonmail.com",
-        "url": "https://aspiz.uk"
-    },
-    "repository": "https://github.com/aspizu/goboscript-ide",
-    "type": "module",
     "scripts": {
         "dev": "vite",
         "build": "node --max-old-space-size=8192 node_modules/vite/bin/vite build",
@@ -20,6 +8,18 @@
         "wasm-debug": "cd goboscript; wasm-pack build --debug | grep -v 'is not a recognized feature for this target'",
         "wasm-release": "cd goboscript; wasm-pack build --release | grep -v 'is not a recognized feature for this target'"
     },
+    "name": "goboscript-ide",
+    "version": "0.1.0",
+    "private": true,
+    "description": "the goboscript IDE",
+    "homepage": "https://aspiz.uk/goboscript/ide",
+    "repository": "https://github.com/aspizu/goboscript-ide",
+    "author": {
+        "name": "Priyanshu Dangare",
+        "email": "aspizu@protonmail.com",
+        "url": "https://aspiz.uk"
+    },
+    "type": "module",
     "dependencies": {
         "@ai-sdk/openai": "^3.0.63",
         "@fontsource-variable/inter": "^5.2.8",
@@ -65,7 +65,6 @@
         "@vitejs/plugin-react": "^6.0.1",
         "esbuild": "^0.28.0",
         "globals": "^17.6.0",
-        "oxfmt": "^0.49.0",
         "oxlint": "^1.63.0",
         "oxlint-tsgolint": "^0.22.1",
         "prettier": "^3.8.3",

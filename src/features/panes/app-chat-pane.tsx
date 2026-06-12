@@ -35,35 +35,25 @@ export function AppChatPane() {
     }
 
     return (
-        <div
-            className="flex flex-col overflow-hidden"
-            style={{flex: "1 1 0", minHeight: 0}}
-        >
-            <div
-                className="space-y-1 overflow-x-hidden overflow-y-auto"
-                style={{flex: "1 1 0", minHeight: 0}}
-            >
+        <div className="flex flex-col overflow-hidden" style={{flex: "1 1 0", minHeight: 0}}>
+            <div className="overflow-x-hidden overflow-y-auto space-y-1" style={{flex: "1 1 0", minHeight: 0}}>
                 {messages.map((msg, i) => (
                     <div
                         key={i}
                         className={
-                            msg.role === "user"
-                                ? "flex justify-end"
-                                : "flex justify-start"
+                            msg.role === "user" ?
+                                "flex justify-end"
+                            :   "flex justify-start"
                         }
                     >
-                        <div
-                            className={
-                                msg.role === "user"
-                                    ? "bg-primary/15 max-w-[85%] rounded-md px-2 py-1 text-sm break-words"
-                                    : "max-w-full min-w-0 overflow-hidden text-sm"
-                            }
-                        >
-                            {msg.role === "user" ? (
-                                msg.content
-                            ) : (
-                                <Streamdown animated>{msg.content}</Streamdown>
-                            )}
+                        <div className={
+                            msg.role === "user" ?
+                                "bg-primary/15 max-w-[85%] rounded-md px-2 py-1 text-sm break-words"
+                            :   "min-w-0 max-w-full overflow-hidden text-sm"
+                        }>
+                        {msg.role === "user" ?
+                            msg.content
+                        :   <Streamdown animated>{msg.content}</Streamdown>}
                         </div>
                     </div>
                 ))}
@@ -86,11 +76,9 @@ export function AppChatPane() {
                         onClick={send}
                         disabled={loading}
                     >
-                        {loading ? (
+                        {loading ?
                             <LoaderCircleIcon className="animate-spin" />
-                        ) : (
-                            <CornerDownLeftIcon />
-                        )}
+                        :   <CornerDownLeftIcon />}
                     </InputGroupButton>
                 </InputGroupAddon>
             </InputGroup>
