@@ -30,7 +30,7 @@ export function AppImageEditor() {
                 />
             )}
             {dimensions && (
-                <div className="absolute right-0.25 bottom-0.25 rounded-md bg-white/90 px-1 text-sm font-medium text-foreground shadow-sm dark:bg-black dark:text-foreground">
+                <div className="absolute right-0.25 bottom-0.25 rounded-md bg-black px-1 text-sm font-medium">
                     {dimensions.x}x{dimensions.y}
                 </div>
             )}

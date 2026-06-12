@@ -44,7 +44,7 @@ export function AppHeader() {
                     className="size-7"
                     onClick={() => Project.scaffolding.greenFlag()}
                 >
-                    <FlagIcon className="text-green-600 dark:text-green-200" />
+                    <FlagIcon className="text-green-200" />
                 </Button>
                 <Button
                     size="icon"
@@ -52,7 +52,7 @@ export function AppHeader() {
                     className="size-7"
                     onClick={() => Project.scaffolding.stopAll()}
                 >
-                    <OctagonXIcon className="text-red-600 dark:text-red-200" />
+                    <OctagonXIcon className="text-red-200" />
                 </Button>
                 <div className="grow" />
                 <Button

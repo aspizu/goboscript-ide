@@ -23,7 +23,7 @@ export function AppCodeEditor(props: EditorProps) {
             <MonacoEditor
                 {...props}
                 className="overflow-hidden"
-                theme="vs"
+                theme="vs-dark"
                 options={options}
                 path={isEditable ? `urn:${path}` : undefined}
                 defaultValue={isEditable ? file : undefined}
