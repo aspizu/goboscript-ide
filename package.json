@@ -21,7 +21,7 @@
     },
     "type": "module",
     "dependencies": {
-        "@ai-sdk/openai": "^3.0.63",
+        "@fontsource-variable/geist": "^5.2.9",
         "@fontsource-variable/inter": "^5.2.8",
         "@fontsource/cascadia-code": "^5.2.3",
         "@icons-pack/react-simple-icons": "^13.13.0",
@@ -45,11 +45,10 @@
         "localforage": "^1.10.0",
         "lucide-react": "^1.14.0",
         "monaco-editor": "^0.55.1",
-        "openai": "^6.37.0",
         "radix-ui": "^1.4.3",
         "react": "^19.2.6",
         "react-dom": "^19.2.6",
-        "streamdown": "^2.5.0",
+        "shadcn": "^4.11.0",
         "tailwind-merge": "^3.5.0",
         "tailwindcss": "^4.3.0",
         "vite": "^8.0.11"

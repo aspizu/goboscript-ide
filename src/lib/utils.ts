@@ -5,8 +5,12 @@ export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs))
 }
 
-export function filepicker(accept?: string | null, multiple?: "multiple" | null) {
-    return new Promise<FileList | null>((resolve) => {
+/** Opens a browser file picker. */
+export function filepicker(
+    accept?: string | null,
+    multiple?: "multiple" | null
+): Promise<FileList | null> {
+    return new Promise((resolve) => {
         const input = document.createElement("input")
         input.type = "file"
         input.accept = accept || ""
@@ -15,9 +19,7 @@ export function filepicker(accept?: string | null, multiple?: "multiple" | null)
         input.oninput = (event) => {
             resolve((event.target as HTMLInputElement).files)
         }
-        input.oncancel = () => {
-            resolve(null)
-        }
+        input.oncancel = () => resolve(null)
         document.body.append(input)
         input.click()
     })

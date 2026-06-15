@@ -1,4 +1,4 @@
-import {Button} from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import {
     Dialog,
     DialogContent,
@@ -13,15 +13,18 @@ import {
     MenubarItem,
     MenubarMenu,
     MenubarSeparator,
+    MenubarShortcut,
     MenubarTrigger
 } from "@/components/ui/menubar"
-import {UploadBox} from "@/components/uploadbox"
-import {filepicker} from "@/lib/utils"
-import {Editor, FS, Project} from "@/state"
-import {useSignal, type Signal} from "@preact/signals-react"
-import {saveAs} from "file-saver"
+import { useSidebar } from "@/components/ui/sidebar"
+import { UploadBox } from "@/components/uploadbox"
+import { SUPPORTS_TRUE_SAVE_AS, trueSaveAs } from "@/lib/trueSaveAs"
+import { filepicker } from "@/lib/utils"
+import { Editor, FS, panelOpen, playerFullscreen, Project } from "@/state"
+import { useSignal, type Signal } from "@preact/signals-react"
+import { saveAs } from "file-saver"
 import JSZip from "jszip"
-import {ExternalLinkIcon} from "lucide-react"
+import { ExternalLinkIcon } from "lucide-react"
 import * as pathlib from "path"
 
 async function onNewFile() {
@@ -58,19 +61,117 @@ async function onOpenFromLibrary() {
     // TODO: Implement open from library functionality
 }
 
-function onSaveAs() {
+function guessMime(ext: string): string {
+    const map: Record<string, string | undefined> = {
+        ".gs": "text/plain",
+        ".toml": "application/toml",
+        ".json": "application/json",
+        ".svg": "image/svg+xml",
+        ".txt": "text/plain"
+    }
+    return map[ext] ?? "application/octet-stream"
+}
+
+async function onSave(as: boolean) {
     const path = Editor.getOpenFile()
-    const entry = FS.getFile(path)
-    if (path && entry) saveAs(entry, pathlib.basename(path))
+    let entry = FS.getFile(path)
+    if (path && entry) {
+        if (typeof entry === "string") {
+            const ext = pathlib.extname(path)
+            entry = new Blob([entry], {type: guessMime(ext)})
+        }
+        if (as) {
+            await trueSaveAs(entry, {
+                suggestedName: pathlib.basename(path),
+                types: [
+                    {
+                        description: "All Files",
+                        accept: {"*/*": [pathlib.extname(path)]}
+                    }
+                ]
+            })
+        } else {
+            saveAs(entry, pathlib.basename(path))
+        }
+    }
 }
 
-async function onSaveProjectAs() {
-    saveAs(await FS.getDirectoryAsZip(""), "Project.zip")
+async function onSaveProject(as: boolean) {
+    const blob = await FS.getDirectoryAsZip("")
+    if (as && SUPPORTS_TRUE_SAVE_AS) {
+        await trueSaveAs(blob, {
+            suggestedName: "Project.zip",
+            types: [{description: "Zip Files", accept: {"application/zip": [".zip"]}}]
+        })
+    } else {
+        saveAs(blob, "Project.zip")
+    }
 }
 
-function onExportAs() {
-    const project = Project.getProject()
-    if (project) saveAs(new Blob([project]), "Project.sb3")
+async function onExportProject(as: boolean) {
+    const blob = new Blob([Project.getProject() ?? new ArrayBuffer()], {
+        type: "application/x.scratch.sb3"
+    })
+    if (as && SUPPORTS_TRUE_SAVE_AS) {
+        await trueSaveAs(blob, {
+            suggestedName: "Project.sb3",
+            types: [
+                {
+                    description: "Scratch Projects",
+                    accept: {"application/x.scratch.sb3": [".sb3"]}
+                }
+            ]
+        })
+    } else {
+        saveAs(blob, "Project.sb3")
+    }
+}
+
+type Shortcut = {
+    code: string
+    key: string
+    keyCode: number
+    altKey?: boolean
+    shiftKey?: boolean
+}
+
+function dispatchEditorShortcut(shortcut: Shortcut) {
+    const editor = Editor.editor.value
+    if (!editor) return
+    editor.focus()
+    const event = new KeyboardEvent("keydown", {
+        altKey: shortcut.altKey,
+        bubbles: true,
+        cancelable: true,
+        code: shortcut.code,
+        key: shortcut.key,
+        metaKey: true,
+        shiftKey: shortcut.shiftKey
+    })
+    Object.defineProperties(event, {
+        keyCode: {value: shortcut.keyCode},
+        which: {value: shortcut.keyCode}
+    })
+    const target = editor.getDomNode()?.querySelector("textarea") ?? editor.getDomNode()
+    target?.dispatchEvent(event)
+}
+
+function dispatchEditorPaste() {
+    const editor = Editor.editor.value
+    if (!editor) return
+    editor.focus()
+    void navigator.clipboard.readText().then((text) => {
+        const clipboardData = new DataTransfer()
+        clipboardData.setData("text/plain", text)
+        const event = new ClipboardEvent("paste", {
+            bubbles: true,
+            cancelable: true,
+            clipboardData
+        })
+        const target =
+            editor.getDomNode()?.querySelector("textarea") ?? editor.getDomNode()
+        target?.dispatchEvent(event)
+    })
 }
 
 function ReplaceProjectDialog({open}: {open: Signal<boolean>}) {
@@ -117,8 +218,19 @@ function ReplaceProjectDialog({open}: {open: Signal<boolean>}) {
     )
 }
 
-export function AppMenubar() {
+export function AppMenubar({
+    onRun,
+    projectPanelShortcut,
+    runShortcut
+}: {
+    onRun: () => void
+    projectPanelShortcut: string
+    runShortcut: string
+}) {
     const replaceProjectDialogOpen = useSignal(false)
+    const hasOpenFile = !!Editor.getOpenFile()
+    const {state: sidebarState, toggleSidebar} = useSidebar()
+    const builtProject = Project.getProject()
     return (
         <Menubar className="grow">
             <MenubarMenu>
@@ -129,7 +241,7 @@ export function AppMenubar() {
                             void onNewFile()
                         }}
                     >
-                        New
+                        New File
                     </MenubarItem>
                     <MenubarItem
                         onSelect={() => {
@@ -138,34 +250,218 @@ export function AppMenubar() {
                     >
                         Open...
                     </MenubarItem>
+                    <MenubarItem disabled>Open Recent</MenubarItem>
                     <MenubarItem
+                        disabled
                         onSelect={() => {
                             void onOpenFromLibrary()
                         }}
                     >
                         Open from Library...
                     </MenubarItem>
-                    <MenubarItem onSelect={onSaveAs}>Save As...</MenubarItem>
+                    <MenubarSeparator />
+                    <MenubarItem
+                        onSelect={() => Editor.close()}
+                        disabled={!hasOpenFile}
+                    >
+                        Close File
+                    </MenubarItem>
+                    <MenubarItem
+                        onSelect={() => void onSave(false)}
+                        disabled={!hasOpenFile}
+                    >
+                        Save
+                    </MenubarItem>
+                    {SUPPORTS_TRUE_SAVE_AS && (
+                        <MenubarItem
+                            onSelect={() => void onSave(true)}
+                            disabled={!hasOpenFile}
+                        >
+                            Save As...
+                        </MenubarItem>
+                    )}
                     <MenubarSeparator />
                     <MenubarItem
                         onSelect={() => (replaceProjectDialogOpen.value = true)}
                     >
                         Open Project...
                     </MenubarItem>
+                    <MenubarItem onSelect={() => void onSaveProject(false)}>
+                        Save Project
+                    </MenubarItem>
+                    {SUPPORTS_TRUE_SAVE_AS && (
+                        <MenubarItem onSelect={() => void onSaveProject(true)}>
+                            Save Project As...
+                        </MenubarItem>
+                    )}
+                    <MenubarSeparator />
                     <MenubarItem
-                        onSelect={() => {
-                            void onSaveProjectAs()
-                        }}
+                        onSelect={() => void onExportProject(false)}
+                        disabled={!builtProject}
                     >
-                        Save Project As...
+                        Export Project
+                    </MenubarItem>
+                    {SUPPORTS_TRUE_SAVE_AS && (
+                        <MenubarItem
+                            onSelect={() => void onExportProject(true)}
+                            disabled={!builtProject}
+                        >
+                            Export Project As...
+                        </MenubarItem>
+                    )}
+                </MenubarContent>
+            </MenubarMenu>
+            <MenubarMenu>
+                <MenubarTrigger>Edit</MenubarTrigger>
+                <MenubarContent>
+                    <MenubarItem
+                        onSelect={() =>
+                            dispatchEditorShortcut({
+                                code: "KeyZ",
+                                key: "z",
+                                keyCode: 90
+                            })
+                        }
+                        disabled={!hasOpenFile}
+                    >
+                        Undo
+                        <MenubarShortcut>⌘Z</MenubarShortcut>
+                    </MenubarItem>
+                    <MenubarItem
+                        onSelect={() =>
+                            dispatchEditorShortcut({
+                                code: "KeyZ",
+                                key: "Z",
+                                keyCode: 90,
+                                shiftKey: true
+                            })
+                        }
+                        disabled={!hasOpenFile}
+                    >
+                        Redo
+                        <MenubarShortcut>⇧⌘Z</MenubarShortcut>
                     </MenubarItem>
                     <MenubarSeparator />
-                    <MenubarItem onSelect={onExportAs} disabled={!Project.getProject()}>
-                        Export As...
+                    <MenubarItem
+                        onSelect={() =>
+                            dispatchEditorShortcut({
+                                code: "KeyX",
+                                key: "x",
+                                keyCode: 88
+                            })
+                        }
+                        disabled={!hasOpenFile}
+                    >
+                        Cut
+                        <MenubarShortcut>⌘X</MenubarShortcut>
+                    </MenubarItem>
+                    <MenubarItem
+                        onSelect={() =>
+                            dispatchEditorShortcut({
+                                code: "KeyC",
+                                key: "c",
+                                keyCode: 67
+                            })
+                        }
+                        disabled={!hasOpenFile}
+                    >
+                        Copy
+                        <MenubarShortcut>⌘C</MenubarShortcut>
+                    </MenubarItem>
+                    <MenubarItem onSelect={dispatchEditorPaste} disabled={!hasOpenFile}>
+                        Paste
+                        <MenubarShortcut>⌘V</MenubarShortcut>
+                    </MenubarItem>
+                    <MenubarItem
+                        onSelect={() =>
+                            dispatchEditorShortcut({
+                                code: "KeyA",
+                                key: "a",
+                                keyCode: 65
+                            })
+                        }
+                        disabled={!hasOpenFile}
+                    >
+                        Select All
+                        <MenubarShortcut>⌘A</MenubarShortcut>
+                    </MenubarItem>
+                    <MenubarSeparator />
+                    <MenubarItem
+                        onSelect={() =>
+                            dispatchEditorShortcut({
+                                code: "KeyF",
+                                key: "f",
+                                keyCode: 70
+                            })
+                        }
+                        disabled={!hasOpenFile}
+                    >
+                        Find...
+                        <MenubarShortcut>⌘F</MenubarShortcut>
+                    </MenubarItem>
+                    <MenubarItem
+                        onSelect={() =>
+                            dispatchEditorShortcut({
+                                altKey: true,
+                                code: "KeyF",
+                                key: "f",
+                                keyCode: 70
+                            })
+                        }
+                        disabled={!hasOpenFile}
+                    >
+                        Find and Replace...
+                        <MenubarShortcut>⌥⌘F</MenubarShortcut>
                     </MenubarItem>
                 </MenubarContent>
             </MenubarMenu>
             <MenubarMenu>
+                <MenubarTrigger>View</MenubarTrigger>
+                <MenubarContent>
+                    <MenubarItem onSelect={toggleSidebar}>
+                        {sidebarState == "expanded" ? "Hide Sidebar" : "Show Sidebar"}
+                        <MenubarShortcut>⌘B</MenubarShortcut>
+                    </MenubarItem>
+                    <MenubarSeparator />
+                    <MenubarItem onSelect={() => (panelOpen.value = !panelOpen.value)}>
+                        {panelOpen.value ? "Hide Project Panel" : "Show Project Panel"}
+                        <MenubarShortcut>{projectPanelShortcut}</MenubarShortcut>
+                    </MenubarItem>
+                    <MenubarItem
+                        onSelect={() =>
+                            (playerFullscreen.value = !playerFullscreen.value)
+                        }
+                    >
+                        {playerFullscreen.value ?
+                            "Exit Player Full Screen"
+                        :   "Enter Player Full Screen"}
+                    </MenubarItem>
+                </MenubarContent>
+            </MenubarMenu>
+            <MenubarMenu>
+                <MenubarTrigger>Project</MenubarTrigger>
+                <MenubarContent>
+                    <MenubarItem
+                        onSelect={() => {
+                            void Project.buildProject()
+                        }}
+                    >
+                        Build Project
+                    </MenubarItem>
+                    <MenubarItem onSelect={onRun}>
+                        Run Project
+                        <MenubarShortcut>{runShortcut}</MenubarShortcut>
+                    </MenubarItem>
+                    <MenubarSeparator />
+                    <MenubarItem onSelect={() => Project.scaffolding.greenFlag()}>
+                        Start Project
+                    </MenubarItem>
+                    <MenubarItem onSelect={() => Project.scaffolding.stopAll()}>
+                        Stop All
+                    </MenubarItem>
+                </MenubarContent>
+            </MenubarMenu>
+<MenubarMenu>
                 <MenubarTrigger>Help</MenubarTrigger>
                 <MenubarContent>
                     <MenubarItem asChild>
@@ -174,7 +470,7 @@ export function AppMenubar() {
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            Documentation
+                            goboscript Documentation
                             <ExternalLinkIcon className="ml-auto" />
                         </a>
                     </MenubarItem>
@@ -184,7 +480,7 @@ export function AppMenubar() {
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            GitHub
+                            goboscript on GitHub
                             <ExternalLinkIcon className="ml-auto" />
                         </a>
                     </MenubarItem>

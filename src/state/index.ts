@@ -1,7 +1,6 @@
 import {localsignal} from "@/lib/localsignal"
 import {signal} from "@preact/signals-react"
 
-export * as Chat from "./chat"
 export * as Console from "./console"
 export * as Editor from "./editor"
 export * as FS from "./fs"

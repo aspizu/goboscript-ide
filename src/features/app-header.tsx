@@ -3,40 +3,45 @@ import {SidebarTrigger} from "@/components/ui/sidebar"
 import {Spinner} from "@/components/ui/spinner"
 import {AppMenubar} from "@/features/app-menubar"
 import {panelOpen, playerFullscreen, Project} from "@/state"
-import {useSignal} from "@preact/signals-react"
 import {
+    CornerDownLeftIcon,
     FlagIcon,
     Maximize2Icon,
     OctagonXIcon,
-    PanelRightIcon,
-    PlayIcon
+    PanelRightIcon
 } from "lucide-react"
 
-export function AppHeader() {
-    const loading = useSignal(false)
-    async function onFlag() {
-        loading.value = true
-        await Project.buildProject()
-        await Project.scaffolding
-            .loadProject(Project.getProject()!)
-            .then(() => Project.scaffolding.greenFlag())
-            .catch(() => {})
-        loading.value = false
-    }
+type _AppHeaderProps = {
+    loading: boolean
+    onRun: () => void
+    projectPanelShortcut: string
+    runShortcut: string
+}
+
+export function AppHeader(props: _AppHeaderProps) {
     return (
         <div className="flex gap-2 p-2">
             <SidebarTrigger />
-            <AppMenubar />
+            <AppMenubar
+                onRun={props.onRun}
+                projectPanelShortcut={props.projectPanelShortcut}
+                runShortcut={props.runShortcut}
+            />
             <div className="flex w-[480px] gap-2">
                 <Button
-                    size="icon"
-                    className="size-7"
-                    onClick={() => { void onFlag() }}
-                    disabled={loading.value}
+                    className="h-7 px-2.5 has-[>svg]:px-2.5"
+                    onClick={() => {
+                        props.onRun()
+                    }}
+                    disabled={props.loading}
                 >
-                    {loading.value ?
-                        <Spinner size="small" />
-                    :   <PlayIcon />}
+                    <span>Run</span>
+                    {props.loading ?
+                        <Spinner
+                            size="small"
+                            className="text-primary-foreground size-4"
+                        />
+                    :   <CornerDownLeftIcon />}
                 </Button>
                 <Button
                     size="icon"
