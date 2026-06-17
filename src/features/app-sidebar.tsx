@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import {Button} from "@/components/ui/button"
 import {
     Collapsible,
     CollapsibleContent,
@@ -18,7 +18,7 @@ import {
     DialogHeader,
     DialogTitle
 } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
+import {Input} from "@/components/ui/input"
 import {
     Sidebar,
     SidebarContent,
@@ -30,12 +30,12 @@ import {
     SidebarMenuItem,
     SidebarMenuSub
 } from "@/components/ui/sidebar"
-import { getCodeIcon } from "@/lib/codeicons"
-import { SUPPORTS_TRUE_SAVE_AS, trueSaveAs } from "@/lib/trueSaveAs"
-import { cn, filepicker } from "@/lib/utils"
-import { Editor, FS } from "@/state"
-import { useSignal, type Signal } from "@preact/signals-react"
-import { saveAs } from "file-saver"
+import {getCodeIcon} from "@/lib/codeicons"
+import {SUPPORTS_TRUE_SAVE_AS, trueSaveAs} from "@/lib/trueSaveAs"
+import {cn, filepicker} from "@/lib/utils"
+import {Editor, FS} from "@/state"
+import {useSignal, type Signal} from "@preact/signals-react"
+import {saveAs} from "file-saver"
 import {
     BoxIcon,
     BracesIcon,

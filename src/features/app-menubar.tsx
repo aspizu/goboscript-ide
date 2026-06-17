@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import {Button} from "@/components/ui/button"
 import {
     Dialog,
     DialogContent,
@@ -7,7 +7,7 @@ import {
     DialogHeader,
     DialogTitle
 } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
+import {Input} from "@/components/ui/input"
 import {
     Menubar,
     MenubarContent,
@@ -17,18 +17,18 @@ import {
     MenubarShortcut,
     MenubarTrigger
 } from "@/components/ui/menubar"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { useSidebar } from "@/components/ui/sidebar"
-import { UploadBox } from "@/components/uploadbox"
+import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group"
+import {useSidebar} from "@/components/ui/sidebar"
+import {UploadBox} from "@/components/uploadbox"
 import * as sb2gsutils from "@/lib/sb2gsutils"
-import { SUPPORTS_TRUE_SAVE_AS, trueSaveAs } from "@/lib/trueSaveAs"
-import { filepicker } from "@/lib/utils"
-import { Editor, FS, panelOpen, playerFullscreen, Project } from "@/state"
-import { useSignal, type Signal } from "@preact/signals-react"
-import { saveAs } from "file-saver"
-import { ExternalLinkIcon } from "lucide-react"
+import {SUPPORTS_TRUE_SAVE_AS, trueSaveAs} from "@/lib/trueSaveAs"
+import {filepicker} from "@/lib/utils"
+import {Editor, FS, panelOpen, playerFullscreen, Project} from "@/state"
+import {useSignal, type Signal} from "@preact/signals-react"
+import {saveAs} from "file-saver"
+import {ExternalLinkIcon} from "lucide-react"
 import * as pathlib from "path"
-import { toast } from "sonner"
+import {toast} from "sonner"
 
 async function onNewFile() {
     const entry = {path: "Untitled.gs", file: ""}
@@ -196,7 +196,13 @@ function ReplaceProjectDialog({open}: {open: Signal<boolean>}) {
             }
             await FS.replaceFiles(files.value)
         } else {
-            await FS.replaceFromZip(file.value)
+            const result = await FS.replaceFromZip(file.value)
+            if (result.isErr()) {
+                toast.error("Failed to open project", {
+                    description: result.error
+                })
+                return
+            }
         }
         open.value = false
     }

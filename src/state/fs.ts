@@ -1,6 +1,7 @@
 import {localsignal} from "@/lib/localsignal"
 import {monaco} from "@/state/editor"
 import JSZip from "jszip"
+import {err, ok, type Result} from "neverthrow"
 import * as pathlib from "node:path"
 
 export type Entry = string | Blob
@@ -151,19 +152,25 @@ export function getDirectoryAsZip(dir: string): Promise<Blob> {
     return zip.generateAsync({type: "blob"})
 }
 
-export async function replaceFromZip(file: Blob) {
-    const zip = await JSZip.loadAsync(file)
+export async function replaceFromZip(file: Blob): Promise<Result<void, string>> {
+    const zip = await JSZip.loadAsync(file).catch(() => undefined)
+    if (!zip) return err("Invalid zip file")
     const stagePath = Object.keys(zip.files).find(
         (name) => pathlib.basename(name) == "stage.gs"
     )
-    const baseDir = stagePath && pathlib.dirname(stagePath)
+    if (!stagePath) return err("Missing stage.gs")
+    const dirname = stagePath && pathlib.dirname(stagePath)
+    const baseDir = dirname && dirname != "." ? `${dirname}/` : ""
     const entries: {path: string; file: Entry}[] = []
     for (let file of Object.values(zip.files)) {
+        if (file.dir) continue
         if (baseDir && !file.name.startsWith(baseDir)) continue
-        if (baseDir) file.name = file.name.slice(baseDir.length + 1)
-        entries.push({path: file.name, file: await file.async("blob")})
+        const path = file.name.slice(baseDir.length)
+        if (!path) continue
+        entries.push({path, file: await file.async("blob")})
     }
     await replaceFiles(entries)
+    return ok(undefined)
 }
 
 export async function replaceFile(path: string, file: Entry) {
