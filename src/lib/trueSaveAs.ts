@@ -13,6 +13,7 @@ export async function trueSaveAs(
         const handle: FileSystemFileHandle = await showSaveFilePicker(opts)
         const writable = await handle.createWritable()
         await writable.write(file)
+        await writable.close()
     } catch (error) {
         if (error instanceof DOMException && error.name === "AbortError") return
         // @ts-ignore
