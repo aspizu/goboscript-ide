@@ -13,3 +13,4 @@ Keep files small and modular (split if too large). Make minimal, relevant refact
 before implementing the change. Write the least amount of readable code necessary,
 make no unrelated changes, and prefer libraries over custom code.
 Do not change code not relevant to the task, Respect the original codebase and code style.
+Prefer shadcn components over custom components, install if missing.

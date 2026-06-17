@@ -1,4 +1,5 @@
 import {SidebarProvider} from "@/components/ui/sidebar"
+import {Toaster} from "@/components/ui/sonner"
 import {AppEditor} from "@/features/app-editor"
 import {AppHeader} from "@/features/app-header"
 import {AppPanel} from "@/features/app-panel"
@@ -78,6 +79,7 @@ export function App() {
     useKeyPress("b", toggleProjectPanelWithKeyboard)
     return (
         <SidebarProvider className="h-dvh">
+            <Toaster />
             <AppSidebar />
             <div className="flex grow flex-col">
                 <AppHeader

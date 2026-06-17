@@ -142,6 +142,21 @@ export function getDirectoryAsZip(dir: string): Promise<Blob> {
     return zip.generateAsync({type: "blob"})
 }
 
+export async function replaceFromZip(file: Blob) {
+    const zip = await JSZip.loadAsync(file)
+    const stagePath = Object.keys(zip.files).find(
+        (name) => pathlib.basename(name) == "stage.gs"
+    )
+    const baseDir = stagePath && pathlib.dirname(stagePath)
+    const entries: {path: string; file: Entry}[] = []
+    for (let file of Object.values(zip.files)) {
+        if (baseDir && !file.name.startsWith(baseDir)) continue
+        if (baseDir) file.name = file.name.slice(baseDir.length + 1)
+        entries.push({path: file.name, file: await file.async("blob")})
+    }
+    await replaceFiles(entries)
+}
+
 export async function replaceFile(path: string, file: Entry) {
     const files = syncWithMonaco()
     if (typeof file !== "string" && EDITABLE_TYPES.includes(pathlib.extname(path))) {

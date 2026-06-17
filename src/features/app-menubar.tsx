@@ -7,6 +7,7 @@ import {
     DialogHeader,
     DialogTitle
 } from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
 import {
     Menubar,
     MenubarContent,
@@ -16,16 +17,18 @@ import {
     MenubarShortcut,
     MenubarTrigger
 } from "@/components/ui/menubar"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { useSidebar } from "@/components/ui/sidebar"
 import { UploadBox } from "@/components/uploadbox"
+import * as sb2gsutils from "@/lib/sb2gsutils"
 import { SUPPORTS_TRUE_SAVE_AS, trueSaveAs } from "@/lib/trueSaveAs"
 import { filepicker } from "@/lib/utils"
 import { Editor, FS, panelOpen, playerFullscreen, Project } from "@/state"
 import { useSignal, type Signal } from "@preact/signals-react"
 import { saveAs } from "file-saver"
-import JSZip from "jszip"
 import { ExternalLinkIcon } from "lucide-react"
 import * as pathlib from "path"
+import { toast } from "sonner"
 
 async function onNewFile() {
     const entry = {path: "Untitled.gs", file: ""}
@@ -135,6 +138,8 @@ type Shortcut = {
     shiftKey?: boolean
 }
 
+type OpenProjectSource = "computer" | "scratch"
+
 function dispatchEditorShortcut(shortcut: Shortcut) {
     const editor = Editor.editor.value
     if (!editor) return
@@ -176,32 +181,66 @@ function dispatchEditorPaste() {
 
 function ReplaceProjectDialog({open}: {open: Signal<boolean>}) {
     const file = useSignal<File>()
+    const scratchUrl = useSignal("")
+    const source = useSignal<OpenProjectSource>("computer")
     async function onReplace() {
         if (!file.value) return
-        const zip = await JSZip.loadAsync(file.value)
-        const stagePath = Object.keys(zip.files).find(
-            (name) => pathlib.basename(name) == "stage.gs"
-        )
-        const baseDir = stagePath && pathlib.dirname(stagePath)
-        const entries: {path: string; file: FS.Entry}[] = []
-        for (let file of Object.values(zip.files)) {
-            if (baseDir && !file.name.startsWith(baseDir)) continue
-            if (baseDir) file.name = file.name.slice(baseDir.length + 1)
-            entries.push({path: file.name, file: await file.async("blob")})
+        if (source.value == "scratch" || pathlib.extname(file.value.name) == ".sb3") {
+            const input = new Uint8Array(await file.value.arrayBuffer())
+            const files = sb2gsutils.decompile(input)
+            if (files.isErr()) {
+                toast.error("Failed to decompile Scratch project", {
+                    description: files.error
+                })
+                return
+            }
+            await FS.replaceFiles(files.value)
+        } else {
+            await FS.replaceFromZip(file.value)
         }
-        await FS.replaceFiles(entries)
         open.value = false
     }
     return (
         <Dialog open={open.value} onOpenChange={(value) => (open.value = value)}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Open Project</DialogTitle>
+                    <DialogTitle>Open project</DialogTitle>
                     <DialogDescription>
                         This will replace your current project with the opened project.
                     </DialogDescription>
                 </DialogHeader>
-                <UploadBox file={file} accept="application/zip" />
+                <div>
+                    <RadioGroup
+                        className="flex"
+                        value={source.value}
+                        onValueChange={(value) => {
+                            source.value = value as OpenProjectSource
+                            file.value = undefined
+                            scratchUrl.value = ""
+                        }}
+                    >
+                        <label className="flex items-center gap-2 text-sm">
+                            <RadioGroupItem value="computer" />
+                            From computer
+                        </label>
+                        <label className="flex items-center gap-2 text-sm">
+                            <RadioGroupItem value="scratch" />
+                            From Scratch
+                        </label>
+                    </RadioGroup>
+                </div>
+                {source.value == "scratch" ?
+                    <Input
+                        type="url"
+                        placeholder="https://scratch.mit.edu/projects/314159265/"
+                        value={scratchUrl.value}
+                        onChange={(event) => (scratchUrl.value = event.target.value)}
+                    />
+                :   <UploadBox
+                        file={file}
+                        accept="application/zip,application/x.scratch.sb3,.zip,.sb3"
+                    />
+                }
                 <DialogFooter>
                     <Button
                         variant="destructive"
@@ -461,7 +500,7 @@ export function AppMenubar({
                     </MenubarItem>
                 </MenubarContent>
             </MenubarMenu>
-<MenubarMenu>
+            <MenubarMenu>
                 <MenubarTrigger>Help</MenubarTrigger>
                 <MenubarContent>
                     <MenubarItem asChild>

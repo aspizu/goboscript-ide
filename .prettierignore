@@ -3,3 +3,4 @@ dist/
 goboscript/
 sb2gs/
 node_modules/
+src/components/ui/

@@ -86,7 +86,7 @@ function RenameDialog({
         <Dialog open={open.value} onOpenChange={(value) => (open.value = value)}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Rename {pathlib.basename(path)}</DialogTitle>
+                    <DialogTitle>Rename “{pathlib.basename(path)}”</DialogTitle>
                     <DialogDescription>Enter a full absolute path</DialogDescription>
                 </DialogHeader>
                 <Input
@@ -123,8 +123,10 @@ function DeleteDialog({
         <Dialog open={open.value} onOpenChange={(value) => (open.value = value)}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Delete {pathlib.basename(path)}?</DialogTitle>
-                    <DialogDescription>This action cannot be undone!</DialogDescription>
+                    <DialogTitle>Delete “{pathlib.basename(path)}”?</DialogTitle>
+                    <DialogDescription>
+                        This action can&apos;t be undone.
+                    </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
                     <Button variant="destructive" onClick={onDelete}>
