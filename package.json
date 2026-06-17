@@ -5,8 +5,12 @@
         "preview": "vite preview",
         "fmt": "prettier -uwu .",
         "check": "tsgo -p tsconfig.app.json --noEmit && oxlint",
-        "wasm-debug": "cd goboscript; wasm-pack build --debug | grep -v 'is not a recognized feature for this target'",
-        "wasm-release": "cd goboscript; wasm-pack build --release | grep -v 'is not a recognized feature for this target'"
+        "wasm-debug": "pnpm run wasm-goboscript-debug && pnpm run wasm-sb2gs-debug",
+        "wasm-release": "pnpm run wasm-goboscript-release && pnpm run wasm-sb2gs-release",
+        "wasm-goboscript-debug": "cd goboscript; wasm-pack build --debug | grep -v 'is not a recognized feature for this target'",
+        "wasm-goboscript-release": "cd goboscript; wasm-pack build --release | grep -v 'is not a recognized feature for this target'",
+        "wasm-sb2gs-debug": "cd sb2gs; wasm-pack build crates/wasm --target web --debug",
+        "wasm-sb2gs-release": "cd sb2gs; wasm-pack build crates/wasm --target web --release"
     },
     "name": "goboscript-ide",
     "version": "0.1.0",
@@ -48,6 +52,7 @@
         "radix-ui": "^1.4.3",
         "react": "^19.2.6",
         "react-dom": "^19.2.6",
+        "sb2gs-wasm": "file:sb2gs/crates/wasm/pkg",
         "shadcn": "^4.11.0",
         "tailwind-merge": "^3.5.0",
         "tailwindcss": "^4.3.0",

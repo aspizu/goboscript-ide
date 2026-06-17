@@ -88,6 +88,9 @@ importers:
             react-dom:
                 specifier: ^19.2.6
                 version: 19.2.6(react@19.2.6)
+            sb2gs-wasm:
+                specifier: file:sb2gs/crates/wasm/pkg
+                version: file:sb2gs/crates/wasm/pkg
             shadcn:
                 specifier: ^4.11.0
                 version: 4.11.0(typescript@6.0.3)
@@ -3960,6 +3963,9 @@ packages:
 
     goboscript@file:goboscript/pkg:
         resolution: {directory: goboscript/pkg, type: directory}
+
+    sb2gs-wasm@file:sb2gs/crates/wasm/pkg:
+        resolution: {directory: sb2gs/crates/wasm/pkg, type: directory}
 
     gopd@1.2.0:
         resolution:
@@ -8364,6 +8370,8 @@ snapshots:
     globals@17.6.0: {}
 
     goboscript@file:goboscript/pkg: {}
+
+    sb2gs-wasm@file:sb2gs/crates/wasm/pkg: {}
 
     gopd@1.2.0: {}
 

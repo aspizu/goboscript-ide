@@ -44,10 +44,45 @@ jobs:
                   name: goboscript-wasm
                   path: goboscript/pkg
 
+    sb2gs-wasm:
+        name: Build sb2gs WASM
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout sb2gs Repository
+              uses: actions/checkout@v4
+              with:
+                  repository: aspizu/sb2gs
+                  ref: f0c780308d8bb8c1365fb4bbd81528bed2779120
+                  path: sb2gs
+
+            - name: Install wasm-pack
+              uses: jetli/wasm-pack-action@v0.4.0
+              with:
+                  version: "latest"
+
+            - name: Setup Rust
+              uses: actions-rust-lang/setup-rust-toolchain@v1
+              with:
+                  toolchain: stable
+                  rustflags: "-A warnings"
+
+            - name: Build sb2gs WASM
+              run: |
+                  cd sb2gs
+                  wasm-pack build crates/wasm --target web --release
+
+            - name: Upload sb2gs WASM Artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: sb2gs-wasm
+                  path: sb2gs/crates/wasm/pkg
+
     build:
         name: Build Project
         runs-on: ubuntu-latest
-        needs: goboscript-wasm
+        needs:
+            - goboscript-wasm
+            - sb2gs-wasm
         steps:
             - name: Checkout Main Repository
               uses: actions/checkout@v4
@@ -57,6 +92,12 @@ jobs:
               with:
                   name: goboscript-wasm
                   path: goboscript/pkg
+
+            - name: Download sb2gs WASM Artifact
+              uses: actions/download-artifact@v4
+              with:
+                  name: sb2gs-wasm
+                  path: sb2gs/crates/wasm/pkg
 
             - name: Setup Bun
               uses: oven-sh/setup-bun@v2
