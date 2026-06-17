@@ -83,7 +83,7 @@ async function onSave(as: boolean) {
             const ext = pathlib.extname(path)
             entry = new Blob([entry], {type: guessMime(ext)})
         }
-        if (as) {
+        if (as && SUPPORTS_TRUE_SAVE_AS) {
             await trueSaveAs(entry, {
                 suggestedName: pathlib.basename(path),
                 types: [

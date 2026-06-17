@@ -154,12 +154,12 @@ function EntryContextMenu({
     open: Signal<boolean>
     children: React.ReactNode
 }) {
-    async function onSaveAs() {
+    async function onSave(as: boolean) {
         const file =
             isDirectory ? await FS.getDirectoryAsZip(path) : FS.getFileBlob(path)
         if (!file) return
         const fileName = pathlib.basename(path)
-        if (SUPPORTS_TRUE_SAVE_AS) {
+        if (as && SUPPORTS_TRUE_SAVE_AS) {
             await trueSaveAs(file, {
                 suggestedName: fileName,
                 types: [
@@ -211,11 +211,20 @@ function EntryContextMenu({
                 </ContextMenuItem>
                 <ContextMenuItem
                     onClick={() => {
-                        void onSaveAs()
+                        void onSave(false)
                     }}
                 >
-                    Save As...
+                    Save
                 </ContextMenuItem>
+                {SUPPORTS_TRUE_SAVE_AS && (
+                    <ContextMenuItem
+                        onClick={() => {
+                            void onSave(true)
+                        }}
+                    >
+                        Save As...
+                    </ContextMenuItem>
+                )}
                 {!isDirectory && (
                     <ContextMenuItem
                         variant="destructive"
