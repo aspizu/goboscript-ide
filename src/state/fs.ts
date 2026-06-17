@@ -57,6 +57,15 @@ export function getFile(path?: string): Entry | undefined {
     return syncWithMonaco()[path]
 }
 
+export function getFileBlob(path?: string): Blob | undefined {
+    if (path === undefined) {
+        return undefined
+    }
+    const file = syncWithMonaco()[path]
+    if (typeof file === "string") return new Blob([file])
+    return file
+}
+
 export function getDefaultFile(path?: string): Entry | undefined {
     if (path === undefined) {
         return undefined

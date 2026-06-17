@@ -1,4 +1,4 @@
-import {Button} from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import {
     Collapsible,
     CollapsibleContent,
@@ -18,7 +18,7 @@ import {
     DialogHeader,
     DialogTitle
 } from "@/components/ui/dialog"
-import {Input} from "@/components/ui/input"
+import { Input } from "@/components/ui/input"
 import {
     Sidebar,
     SidebarContent,
@@ -30,11 +30,12 @@ import {
     SidebarMenuItem,
     SidebarMenuSub
 } from "@/components/ui/sidebar"
-import {getCodeIcon} from "@/lib/codeicons"
-import {cn, filepicker} from "@/lib/utils"
-import {Editor, FS} from "@/state"
-import {useSignal, type Signal} from "@preact/signals-react"
-import {saveAs} from "file-saver"
+import { getCodeIcon } from "@/lib/codeicons"
+import { SUPPORTS_TRUE_SAVE_AS, trueSaveAs } from "@/lib/trueSaveAs"
+import { cn, filepicker } from "@/lib/utils"
+import { Editor, FS } from "@/state"
+import { useSignal, type Signal } from "@preact/signals-react"
+import { saveAs } from "file-saver"
 import {
     BoxIcon,
     BracesIcon,
@@ -154,8 +155,23 @@ function EntryContextMenu({
     children: React.ReactNode
 }) {
     async function onSaveAs() {
-        if (!isDirectory) return saveAs(FS.getFile(path)!, pathlib.basename(path))
-        saveAs(await FS.getDirectoryAsZip(path), pathlib.basename(path) + ".zip")
+        const file =
+            isDirectory ? await FS.getDirectoryAsZip(path) : FS.getFileBlob(path)
+        if (!file) return
+        const fileName = pathlib.basename(path)
+        if (SUPPORTS_TRUE_SAVE_AS) {
+            await trueSaveAs(file, {
+                suggestedName: fileName,
+                types: [
+                    {
+                        description: "All Files",
+                        accept: {"*/*": [pathlib.extname(path)]}
+                    }
+                ]
+            })
+        } else {
+            saveAs(file, fileName)
+        }
     }
     function onDuplicate() {
         const entry = {path, file: FS.getFile(path)!}
