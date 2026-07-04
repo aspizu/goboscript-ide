@@ -1,13 +1,13 @@
-import {SidebarProvider} from "@/components/ui/sidebar"
-import {Toaster} from "@/components/ui/sonner"
-import {AppEditor} from "@/features/app-editor"
-import {AppHeader} from "@/features/app-header"
-import {AppPanel} from "@/features/app-panel"
-import {AppSidebar} from "@/features/app-sidebar"
-import {cn} from "@/lib/utils"
-import {panelOpen, Project} from "@/state"
-import {useSignal} from "@preact/signals-react"
-import {useCallback, useEffect} from "react"
+import { SidebarProvider } from "@/components/ui/sidebar"
+import { Toaster } from "@/components/ui/sonner"
+import { AppEditor } from "@/features/app-editor"
+import { AppHeader } from "@/features/app-header"
+import { AppPanel } from "@/features/app-panel"
+import { AppSidebar } from "@/features/app-sidebar"
+import {cn, sleep} from "@/lib/utils"
+import { panelOpen, Project } from "@/state"
+import { useSignal } from "@preact/signals-react"
+import { useCallback, useEffect } from "react"
 
 const minimumRunLoadingMs = 300
 
@@ -31,28 +31,24 @@ export function App() {
     const macosOrIosAgent = isMacosOrIosAgent()
     const runShortcut = macosOrIosAgent ? "⌘↩" : "Ctrl↩"
     const projectPanelShortcut = macosOrIosAgent ? "⇧⌘B" : "Ctrl⇧B"
-    const runProject = useCallback(() => {
+    const runProject = useCallback(async () => {
         if (loading.value) return
         const startedAt = performance.now()
         loading.value = true
-        void Project.buildProject()
-            .then(() =>
-                Project.scaffolding
-                    .loadProject(Project.getProject()!)
-                    .then(() => Project.scaffolding.greenFlag())
-                    .catch(() => {})
-            )
-            .finally(() => {
-                const remainingLoadingMs =
-                    minimumRunLoadingMs - (performance.now() - startedAt)
-                if (remainingLoadingMs <= 0) {
-                    loading.value = false
-                    return
-                }
-                window.setTimeout(() => {
-                    loading.value = false
-                }, remainingLoadingMs)
-            })
+        try {
+            await Project.buildProject()
+            const project = Project.getProject()
+            if (!project) return
+            await Project.scaffolding.loadProject(project)
+            Project.scaffolding.greenFlag()
+        } catch (error) {
+            console.error(error)
+        } finally {
+            const remainingLoadingMs =
+                minimumRunLoadingMs - (performance.now() - startedAt)
+            if (remainingLoadingMs > 0) await sleep(remainingLoadingMs)
+            loading.value = false
+        }
     }, [loading])
     const runProjectWithKeyboard = useCallback(
         (event: KeyboardEvent) => {
@@ -60,7 +56,7 @@ export function App() {
             if (!macosOrIosAgent && !event.ctrlKey) return
             event.preventDefault()
             event.stopPropagation()
-            runProject()
+            void runProject()
         },
         [macosOrIosAgent, runProject]
     )

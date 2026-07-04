@@ -268,7 +268,7 @@ export function AppMenubar({
     projectPanelShortcut,
     runShortcut
 }: {
-    onRun: () => void
+    onRun: () => Promise<void>
     projectPanelShortcut: string
     runShortcut: string
 }) {
@@ -493,7 +493,7 @@ export function AppMenubar({
                     >
                         Build Project
                     </MenubarItem>
-                    <MenubarItem onSelect={onRun}>
+                    <MenubarItem onSelect={() => void onRun()}>
                         Run Project
                         <MenubarShortcut>{runShortcut}</MenubarShortcut>
                     </MenubarItem>

@@ -1,8 +1,8 @@
-import {Button} from "@/components/ui/button"
-import {SidebarTrigger} from "@/components/ui/sidebar"
-import {Spinner} from "@/components/ui/spinner"
-import {AppMenubar} from "@/features/app-menubar"
-import {panelOpen, playerFullscreen, Project} from "@/state"
+import { Button } from "@/components/ui/button"
+import { SidebarTrigger } from "@/components/ui/sidebar"
+import { Spinner } from "@/components/ui/spinner"
+import { AppMenubar } from "@/features/app-menubar"
+import { panelOpen, playerFullscreen, Project } from "@/state"
 import {
     CornerDownLeftIcon,
     FlagIcon,
@@ -13,7 +13,7 @@ import {
 
 type _AppHeaderProps = {
     loading: boolean
-    onRun: () => void
+    onRun: () => Promise<void>
     projectPanelShortcut: string
     runShortcut: string
 }
@@ -31,7 +31,7 @@ export function AppHeader(props: _AppHeaderProps) {
                 <Button
                     className="h-7 px-2.5 has-[>svg]:px-2.5"
                     onClick={() => {
-                        props.onRun()
+                        void props.onRun()
                     }}
                     disabled={props.loading}
                 >

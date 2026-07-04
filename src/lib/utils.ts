@@ -5,6 +5,10 @@ export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs))
 }
 
+export async function sleep(ms: number) {
+    await new Promise<void>((resolve) => window.setTimeout(resolve, ms))
+}
+
 /** Opens a browser file picker. */
 export function filepicker(
     accept?: string | null,
