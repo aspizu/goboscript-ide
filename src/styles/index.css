@@ -136,3 +136,15 @@
 .pixelated {
     image-rendering: pixelated;
 }
+
+@keyframes menu-item-blink {
+    0%,
+    100% {
+        background-color: var(--primary);
+        color: var(--primary-foreground);
+    }
+    50% {
+        background-color: var(--primary-foreground);
+        color: var(--primary);
+    }
+}

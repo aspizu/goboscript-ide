@@ -4,10 +4,35 @@ import {CheckIcon, ChevronRightIcon, CircleIcon} from "lucide-react"
 
 import {cn} from "@/lib/utils"
 
+const ContextMenuCloseContext = React.createContext<(() => void) | undefined>(
+    undefined
+)
+
 function ContextMenu({
+    onOpenChange: handleOpenChange,
     ...props
-}: React.ComponentProps<typeof ContextMenuPrimitive.Root>) {
-    return <ContextMenuPrimitive.Root data-slot="context-menu" {...props} />
+}: Omit<
+    React.ComponentProps<typeof ContextMenuPrimitive.Root>,
+    "onOpenChange"
+> & {
+    onOpenChange?: (open: boolean) => void
+}) {
+    const [key, setKey] = React.useState(0)
+    const close = React.useCallback(() => {
+        setKey((currentKey) => currentKey + 1)
+        handleOpenChange?.(false)
+    }, [handleOpenChange])
+
+    return (
+        <ContextMenuCloseContext value={close}>
+            <ContextMenuPrimitive.Root
+                key={key}
+                data-slot="context-menu"
+                onOpenChange={handleOpenChange}
+                {...props}
+            />
+        </ContextMenuCloseContext>
+    )
 }
 
 function ContextMenuTrigger({
@@ -58,7 +83,7 @@ function ContextMenuSubTrigger({
             data-slot="context-menu-sub-trigger"
             data-inset={inset}
             className={cn(
-                "focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground flex cursor-default items-center rounded-sm px-2 py-1 text-sm outline-hidden select-none data-[inset]:pl-8 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+                "focus:bg-primary focus:text-primary-foreground data-[state=open]:bg-primary data-[state=open]:text-primary-foreground flex cursor-default items-center rounded-sm px-2 py-1 text-sm outline-hidden select-none data-[inset]:pl-8 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
                 className
             )}
             {...props}
@@ -106,21 +131,50 @@ function ContextMenuContent({
 function ContextMenuItem({
     className,
     inset,
+    onSelect,
     variant = "default",
     ...props
 }: React.ComponentProps<typeof ContextMenuPrimitive.Item> & {
     inset?: boolean
     variant?: "default" | "destructive"
 }) {
+    const [blinking, setBlinking] = React.useState(false)
+    const timeout = React.useRef<number | undefined>(undefined)
+    const close = React.useContext(ContextMenuCloseContext)
+
+    React.useEffect(
+        () => () => {
+            if (timeout.current != undefined) {
+                window.clearTimeout(timeout.current)
+            }
+        },
+        []
+    )
+
     return (
         <ContextMenuPrimitive.Item
             data-slot="context-menu-item"
+            data-blinking={blinking ? true : undefined}
             data-inset={inset}
             data-variant={variant}
             className={cn(
-                "focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:!text-destructive [&_svg:not([class*='text-'])]:text-muted-foreground relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[inset]:pl-8 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+                "focus:bg-primary focus:text-primary-foreground data-[blinking]:animate-[menu-item-blink_220ms_ease-out] data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:!text-destructive [&_svg:not([class*='text-'])]:text-muted-foreground relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[inset]:pl-8 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
                 className
             )}
+            onSelect={(event) => {
+                event.preventDefault()
+                setBlinking(true)
+
+                if (timeout.current != undefined) {
+                    window.clearTimeout(timeout.current)
+                }
+
+                timeout.current = window.setTimeout(() => {
+                    setBlinking(false)
+                    close?.()
+                    onSelect?.(event)
+                }, 220)
+            }}
             {...props}
         />
     )
@@ -136,7 +190,7 @@ function ContextMenuCheckboxItem({
         <ContextMenuPrimitive.CheckboxItem
             data-slot="context-menu-checkbox-item"
             className={cn(
-                "focus:bg-accent focus:text-accent-foreground relative flex cursor-default items-center gap-2 rounded-sm py-1 pr-2 pl-8 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+                "focus:bg-primary focus:text-primary-foreground relative flex cursor-default items-center gap-2 rounded-sm py-1 pr-2 pl-8 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
                 className
             )}
             checked={checked}
@@ -161,7 +215,7 @@ function ContextMenuRadioItem({
         <ContextMenuPrimitive.RadioItem
             data-slot="context-menu-radio-item"
             className={cn(
-                "focus:bg-accent focus:text-accent-foreground relative flex cursor-default items-center gap-2 rounded-sm py-1 pr-2 pl-8 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+                "focus:bg-primary focus:text-primary-foreground relative flex cursor-default items-center gap-2 rounded-sm py-1 pr-2 pl-8 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
                 className
             )}
             {...props}

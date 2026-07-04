@@ -209,18 +209,18 @@ function EntryContextMenu({
             <ContextMenuContent>
                 {!isDirectory && (
                     <ContextMenuItem
-                        onClick={() => {
+                        onSelect={() => {
                             onDuplicate()
                         }}
                     >
                         Duplicate
                     </ContextMenuItem>
                 )}
-                <ContextMenuItem onClick={() => (isRenameDialogOpen.value = true)}>
+                <ContextMenuItem onSelect={() => (isRenameDialogOpen.value = true)}>
                     Rename...
                 </ContextMenuItem>
                 <ContextMenuItem
-                    onClick={() => {
+                    onSelect={() => {
                         void onSave(false)
                     }}
                 >
@@ -228,7 +228,7 @@ function EntryContextMenu({
                 </ContextMenuItem>
                 {SUPPORTS_TRUE_SAVE_AS && (
                     <ContextMenuItem
-                        onClick={() => {
+                        onSelect={() => {
                             void onSave(true)
                         }}
                     >
@@ -237,8 +237,7 @@ function EntryContextMenu({
                 )}
                 {!isDirectory && (
                     <ContextMenuItem
-                        variant="destructive"
-                        onClick={() => {
+                        onSelect={() => {
                             void onReplace()
                         }}
                     >
@@ -246,8 +245,7 @@ function EntryContextMenu({
                     </ContextMenuItem>
                 )}
                 <ContextMenuItem
-                    variant="destructive"
-                    onClick={() => (isDeleteDialogOpen.value = true)}
+                    onSelect={() => (isDeleteDialogOpen.value = true)}
                 >
                     Delete...
                 </ContextMenuItem>
