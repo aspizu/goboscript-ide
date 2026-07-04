@@ -29,7 +29,7 @@ function useKeyPress(key: string, callback: (event: KeyboardEvent) => void) {
 export function App() {
     const loading = useSignal(false)
     const macosOrIosAgent = isMacosOrIosAgent()
-    const runShortcut = macosOrIosAgent ? "⌘↩" : "Ctrl↩"
+    const runShortcut = macosOrIosAgent ? "⌘⏎" : "Ctrl⏎"
     const projectPanelShortcut = macosOrIosAgent ? "⇧⌘B" : "Ctrl⇧B"
     const runProject = useCallback(async () => {
         if (loading.value) return
