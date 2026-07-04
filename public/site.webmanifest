@@ -4,9 +4,9 @@
     "description": "the goboscript IDE",
     "start_url": ".",
     "scope": ".",
-    "display": "standalone",
-    "background_color": "#0b1717",
-    "theme_color": "#0b1717",
+    "display": "minimal-ui",
+    "background_color": "#161616",
+    "theme_color": "#161616",
     "icons": [
         {
             "src": "favicon.svg",
