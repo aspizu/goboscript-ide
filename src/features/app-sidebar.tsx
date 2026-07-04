@@ -206,7 +206,7 @@ function EntryContextMenu({
             <ContextMenuTrigger asChild>
                 <div>{children}</div>
             </ContextMenuTrigger>
-            <ContextMenuContent>
+            <ContextMenuContent className="min-w-[8rem]">
                 {!isDirectory && (
                     <ContextMenuItem
                         onSelect={() => {

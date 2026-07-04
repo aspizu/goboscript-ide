@@ -280,7 +280,7 @@ export function AppMenubar({
         <Menubar className="grow">
             <MenubarMenu>
                 <MenubarTrigger>File</MenubarTrigger>
-                <MenubarContent>
+                <MenubarContent className="min-w-[14rem]">
                     <MenubarItem
                         onSelect={() => {
                             void onNewFile()
@@ -358,7 +358,7 @@ export function AppMenubar({
             </MenubarMenu>
             <MenubarMenu>
                 <MenubarTrigger>Edit</MenubarTrigger>
-                <MenubarContent>
+                <MenubarContent className="min-w-[14rem]">
                     <MenubarItem
                         onSelect={() =>
                             dispatchEditorShortcut({
@@ -462,7 +462,7 @@ export function AppMenubar({
             </MenubarMenu>
             <MenubarMenu>
                 <MenubarTrigger>View</MenubarTrigger>
-                <MenubarContent>
+                <MenubarContent className="min-w-[14rem]">
                     <MenubarItem onSelect={toggleSidebar}>
                         {sidebarState == "expanded" ? "Hide Sidebar" : "Show Sidebar"}
                         <MenubarShortcut>⌘B</MenubarShortcut>
@@ -485,7 +485,7 @@ export function AppMenubar({
             </MenubarMenu>
             <MenubarMenu>
                 <MenubarTrigger>Project</MenubarTrigger>
-                <MenubarContent>
+                <MenubarContent className="min-w-[14rem]">
                     <MenubarItem
                         onSelect={() => {
                             void Project.buildProject()
@@ -508,7 +508,7 @@ export function AppMenubar({
             </MenubarMenu>
             <MenubarMenu>
                 <MenubarTrigger>Help</MenubarTrigger>
-                <MenubarContent>
+                <MenubarContent className="min-w-[14rem]">
                     <MenubarItem asChild>
                         <a
                             href="https://aspiz.uk/goboscript/docs/getting-started/basic-examples.html"
