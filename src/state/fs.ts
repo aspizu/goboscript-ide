@@ -30,6 +30,24 @@ function syncToMonaco() {
     }
 }
 
+function renameMonacoModel(oldPath: string, newPath: string, entry: Entry) {
+    if (oldPath == newPath || typeof entry !== "string") return
+
+    const oldUri = monaco.value.Uri.parse(`urn:${oldPath}`)
+    const newUri = monaco.value.Uri.parse(`urn:${newPath}`)
+    const oldModel = monaco.value.editor.getModel(oldUri)
+    const newModel = monaco.value.editor.getModel(newUri)
+    const value = oldModel?.getValue() ?? entry
+
+    if (newModel) {
+        newModel.setValue(value)
+    } else {
+        monaco.value.editor.createModel(value, oldModel?.getLanguageId(), newUri)
+    }
+
+    oldModel?.dispose()
+}
+
 export type Tree = {[key: string]: Tree}
 
 export function getTree() {
@@ -125,6 +143,7 @@ export function renameFile(oldPath: string, newPath: string) {
     delete files[oldPath]
     files[newPath] = file
     fs.value = files
+    renameMonacoModel(oldPath, newPath, file)
 }
 
 export function renameDirectory(oldDir: string, newDir: string) {
@@ -135,8 +154,9 @@ export function renameDirectory(oldDir: string, newDir: string) {
         if (!path.startsWith(oldDir)) continue
         const file = files[path]
         delete files[path]
-        path = newDir + path.slice(oldDir.length)
-        files[path] = file
+        const newPath = newDir + path.slice(oldDir.length)
+        files[newPath] = file
+        renameMonacoModel(path, newPath, file)
     }
     fs.value = files
 }
