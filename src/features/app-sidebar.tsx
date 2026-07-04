@@ -76,9 +76,19 @@ function RenameDialog({
 }) {
     const newPath = useSignal(path)
     function onRename() {
-        if (isDirectory) return FS.renameDirectory(path, newPath.value)
+        const openFile = Editor.getOpenFile()
+        if (isDirectory) {
+            const oldDir = path.endsWith("/") ? path : `${path}/`
+            const newDir =
+                newPath.value.endsWith("/") ? newPath.value : `${newPath.value}/`
+            FS.renameDirectory(path, newPath.value)
+            if (openFile?.startsWith(oldDir)) {
+                Editor.setOpenFile(newDir + openFile.slice(oldDir.length))
+            }
+            return
+        }
         FS.renameFile(path, newPath.value)
-        if (Editor.getOpenFile() == path) Editor.setOpenFile(newPath.value)
+        if (openFile == path) Editor.setOpenFile(newPath.value)
     }
     return (
         <Dialog open={open.value} onOpenChange={(value) => (open.value = value)}>
@@ -111,7 +121,10 @@ function DeleteDialog({
     function onDelete() {
         if (isDirectory) {
             FS.removeDirectory(path)
-            if (Editor.getOpenFile()?.startsWith(path)) Editor.close()
+            const dir = path.endsWith("/") ? path : `${path}/`
+            if (Editor.getOpenFile()?.startsWith(dir)) {
+                Editor.close()
+            }
         } else {
             FS.removeFile(path)
             if (Editor.getOpenFile() == path) Editor.close()
