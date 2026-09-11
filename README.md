@@ -2,7 +2,7 @@
 
 ![](https://u.cubeupload.com/aspizu/Screenshot20250529at.png)
 
-[**Launch goboscript IDE**](https://aspiz.uk/goboscript.ide/)
+[**Launch goboscript IDE**](https://aspiz.uk/goboscript/ide/)
 
 Code editor with integrated project player for creating goboscript projects quickly.
 

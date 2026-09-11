@@ -3,6 +3,8 @@
         "dev": "vite",
         "build": "node --max-old-space-size=8192 node_modules/vite/bin/vite build",
         "preview": "vite preview",
+        "build:cloudflare": "pnpm run build --outDir .wrangler/assets/goboscript/ide",
+        "deploy": "pnpm run build:cloudflare && wrangler deploy",
         "fmt": "prettier -uwu .",
         "check": "tsgo -p tsconfig.app.json --noEmit && oxlint",
         "wasm-debug": "pnpm run wasm-goboscript-debug && pnpm run wasm-sb2gs-debug",
@@ -82,6 +84,7 @@
         "vite-plugin-babel": "^1.6.0",
         "vite-plugin-node-polyfills": "^0.26.0",
         "vite-plugin-top-level-await": "^1.6.0",
-        "vite-plugin-wasm": "^3.6.0"
+        "vite-plugin-wasm": "^3.6.0",
+        "wrangler": "^4.131.0"
     }
 }

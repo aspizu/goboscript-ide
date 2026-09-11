@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy to Cloudflare
 
 on:
     push:
@@ -7,8 +7,11 @@ on:
     workflow_dispatch:
 
 concurrency:
-    group: "pages"
+    group: "cloudflare"
     cancel-in-progress: true
+
+permissions:
+    contents: read
 
 jobs:
     goboscript-wasm:
@@ -99,32 +102,28 @@ jobs:
                   name: sb2gs-wasm
                   path: sb2gs/crates/wasm/pkg
 
-            - name: Setup Bun
-              uses: oven-sh/setup-bun@v2
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                  version: 12.3.4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "22"
+                  cache: pnpm
 
             - name: Install Dependencies
-              run: bun install
+              run: pnpm install --frozen-lockfile
+
+            - name: Check Project
+              run: pnpm run check
 
             - name: Build Project
-              run: bun run build
+              run: pnpm run build:cloudflare
 
-            - name: Upload Pages Artifact
-              uses: actions/upload-pages-artifact@v3
-              with:
-                  name: github-pages
-                  path: ./dist
-
-    deploy:
-        name: Deploy to GitHub Pages
-        runs-on: ubuntu-latest
-        needs: build
-        permissions:
-            pages: write
-            id-token: write
-        environment:
-            name: github-pages
-            url: ${{ steps.deploy.outputs.page_url }}
-        steps:
-            - name: Deploy to GitHub Pages
-              id: deploy
-              uses: actions/deploy-pages@v4
+            - name: Deploy to Cloudflare
+              run: pnpm exec wrangler deploy
+              env:
+                  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+                  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
