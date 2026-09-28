@@ -490,13 +490,15 @@ export function AppMenubar({
                             (playerFullscreen.value = !playerFullscreen.value)
                         }
                     >
-                        {playerFullscreen.value ?
-                            "Exit Player Full Screen"
-                        :   "Enter Player Full Screen"}
+                        {playerFullscreen.value ? "Exit" : "Enter"}{" "}
+                        {livecodingMode.value ? "App" : "Player"} Full Screen
                     </MenubarItem>
                     <MenubarSeparator />
                     <MenubarItem
                         onSelect={() => {
+                            if (livecodingMode.value) {
+                                playerFullscreen.value = false
+                            }
                             livecodingMode.value = !livecodingMode.value
                             if (livecodingMode.value) {
                                 previousPanels.current = {

@@ -1,6 +1,6 @@
 import {useFullscreen} from "@/hooks/use-fullscreen"
 import {cn} from "@/lib/utils"
-import {playerFullscreen, Project} from "@/state"
+import {livecodingMode, playerFullscreen, Project} from "@/state"
 import {useEffect, useMemo, useRef} from "react"
 
 export function AppPlayer({className}: {className?: string}) {
@@ -9,7 +9,9 @@ export function AppPlayer({className}: {className?: string}) {
         () => new ResizeObserver(() => Project.scaffolding.relayout()),
         []
     )
-    useFullscreen(playerFullscreen, ref)
+    useFullscreen(playerFullscreen, () =>
+        livecodingMode.value ? document.documentElement : ref.current
+    )
     useEffect(() => {
         if (!ref.current) return
         Project.scaffolding.appendTo(ref.current)
