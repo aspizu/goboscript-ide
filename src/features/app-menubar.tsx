@@ -28,6 +28,7 @@ import {useSignal, type Signal} from "@preact/signals-react"
 import {saveAs} from "file-saver"
 import {ExternalLinkIcon} from "lucide-react"
 import * as pathlib from "path"
+import {useRef} from "react"
 import {toast} from "sonner"
 
 async function onNewFile() {
@@ -274,7 +275,19 @@ export function AppMenubar({
 }) {
     const replaceProjectDialogOpen = useSignal(false)
     const hasOpenFile = !!Editor.getOpenFile()
-    const {state: sidebarState, toggleSidebar} = useSidebar()
+    const {
+        state: sidebarState,
+        open: sidebarOpen,
+        openMobile: sidebarOpenMobile,
+        toggleSidebar,
+        setOpen,
+        setOpenMobile
+    } = useSidebar()
+    const previousPanels = useRef<{
+        sidebar: boolean
+        mobileSidebar: boolean
+        project: boolean
+    } | null>(null)
     const builtProject = Project.getProject()
     return (
         <Menubar className="grow">
@@ -485,6 +498,21 @@ export function AppMenubar({
                     <MenubarItem
                         onSelect={() => {
                             livecodingMode.value = !livecodingMode.value
+                            if (livecodingMode.value) {
+                                previousPanels.current = {
+                                    sidebar: sidebarOpen,
+                                    mobileSidebar: sidebarOpenMobile,
+                                    project: panelOpen.value
+                                }
+                                setOpen(false)
+                                setOpenMobile(false)
+                                panelOpen.value = false
+                            } else if (previousPanels.current) {
+                                setOpen(previousPanels.current.sidebar)
+                                setOpenMobile(previousPanels.current.mobileSidebar)
+                                panelOpen.value = previousPanels.current.project
+                                previousPanels.current = null
+                            }
                         }}
                     >
                         {livecodingMode.value ?
