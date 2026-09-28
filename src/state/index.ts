@@ -8,4 +8,4 @@ export * as Project from "./project"
 
 export const panelOpen = await localsignal("panelOpen", true)
 export const playerFullscreen = signal(false)
-export const livecodingMode = await localsignal("livecodingMode", false)
+export const livecodingMode = signal(false)
