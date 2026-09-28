@@ -137,6 +137,19 @@
     image-rendering: pixelated;
 }
 
+.livecoding-editor .monaco-editor .view-lines {
+    text-shadow:
+        -2px 0 #000,
+        2px 0 #000,
+        0 -2px #000,
+        0 2px #000,
+        -1.5px -1.5px #000,
+        1.5px -1.5px #000,
+        -1.5px 1.5px #000,
+        1.5px 1.5px #000,
+        0 0 6px #000;
+}
+
 @keyframes menu-item-blink {
     0%,
     100% {

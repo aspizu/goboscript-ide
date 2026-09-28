@@ -20,7 +20,7 @@ export function AppCodeEditor(props: EditorProps) {
         <div
             className={cn(
                 "grow overflow-hidden",
-                !livecodingMode.value && "bg-[#1e1e1e]",
+                livecodingMode.value ? "livecoding-editor" : "bg-[#1e1e1e]",
                 !isEditable && "hidden"
             )}
         >
