@@ -23,7 +23,7 @@ import {UploadBox} from "@/components/uploadbox"
 import * as sb2gsutils from "@/lib/sb2gsutils"
 import {SUPPORTS_TRUE_SAVE_AS, trueSaveAs} from "@/lib/trueSaveAs"
 import {filepicker} from "@/lib/utils"
-import {Editor, FS, panelOpen, playerFullscreen, Project} from "@/state"
+import {Editor, FS, livecodingMode, panelOpen, playerFullscreen, Project} from "@/state"
 import {useSignal, type Signal} from "@preact/signals-react"
 import {saveAs} from "file-saver"
 import {ExternalLinkIcon} from "lucide-react"
@@ -480,6 +480,16 @@ export function AppMenubar({
                         {playerFullscreen.value ?
                             "Exit Player Full Screen"
                         :   "Enter Player Full Screen"}
+                    </MenubarItem>
+                    <MenubarSeparator />
+                    <MenubarItem
+                        onSelect={() => {
+                            livecodingMode.value = !livecodingMode.value
+                        }}
+                    >
+                        {livecodingMode.value ?
+                            "Disable Livecoding Mode"
+                        :   "Enable Livecoding Mode"}
                     </MenubarItem>
                 </MenubarContent>
             </MenubarMenu>
