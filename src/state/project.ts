@@ -17,6 +17,7 @@ scaffolding.shouldConnectPeripherals = true
 scaffolding.editableLists = false
 scaffolding.usePackagedRuntime = false
 scaffolding.setup()
+scaffolding.vm.setCompilerOptions({enabled: false})
 attachDebugger(scaffolding.vm)
 
 const artifact = await localsignal<goboscript.Artifact & {file: ArrayBuffer}>(
