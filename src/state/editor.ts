@@ -30,10 +30,15 @@ export function close() {
 
 export function onBeforeMount($monaco: Monaco) {
     syntax.register($monaco)
-    $monaco.editor.defineTheme("livecoding", {
+    const theme: $monaco.editor.IStandaloneThemeData = {
         base: "vs-dark",
         inherit: true,
-        rules: [],
+        rules: [{token: "support.function.builtin.goboscript", foreground: "DCDCAA"}],
+        colors: {}
+    }
+    $monaco.editor.defineTheme("goboscript-dark", theme)
+    $monaco.editor.defineTheme("livecoding", {
+        ...theme,
         colors: {
             "editor.background": "#00000000",
             "editorGutter.background": "#00000000"

@@ -175,6 +175,9 @@ export function register(monaco: NonNullable<ReturnType<typeof useMonaco>>) {
             "change_pen_saturation",
             "change_pen_brightness",
             "change_pen_transparency",
+            "play_drum",
+            "play_note",
+            "set_instrument",
             "rest",
             "set_tempo",
             "change_tempo"
@@ -230,11 +233,7 @@ export function register(monaco: NonNullable<ReturnType<typeof useMonaco>>) {
 
                 [
                     /\b(proc|func)\b(\s+)([a-zA-Z_][_a-zA-Z0-9]*)/,
-                    [
-                        "keyword",
-                        "",
-                        {token: "entity.name.function", next: "@signature"}
-                    ]
+                    ["keyword", "", {token: "entity.name.function", next: "@signature"}]
                 ],
                 [/[a-zA-Z_0-9]+!/, "variable.parameter"],
                 [/\$[_a-zA-Z0-9]+/, "variable.parameter"],

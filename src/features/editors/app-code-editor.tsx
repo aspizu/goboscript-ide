@@ -27,7 +27,7 @@ export function AppCodeEditor(props: EditorProps) {
             <MonacoEditor
                 {...props}
                 className="overflow-hidden"
-                theme={livecodingMode.value ? "livecoding" : "vs-dark"}
+                theme={livecodingMode.value ? "livecoding" : "goboscript-dark"}
                 options={options}
                 path={isEditable ? `urn:${path}` : undefined}
                 defaultValue={isEditable ? file : undefined}
