@@ -1,4 +1,5 @@
 import {cn} from "@/lib/utils"
+import {Spinner} from "@/components/ui/spinner"
 import {Editor, FS, livecodingMode} from "@/state"
 import {Editor as MonacoEditor, type EditorProps} from "@monaco-editor/react"
 import * as $monaco from "monaco-editor"
@@ -27,6 +28,7 @@ export function AppCodeEditor(props: EditorProps) {
             <MonacoEditor
                 {...props}
                 className="overflow-hidden"
+                loading={<Spinner />}
                 theme={livecodingMode.value ? "livecoding" : "goboscript-dark"}
                 options={options}
                 path={isEditable ? `urn:${path}` : undefined}

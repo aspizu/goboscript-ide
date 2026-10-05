@@ -122,6 +122,11 @@
     html {
         @apply font-sans;
     }
+    html,
+    body,
+    #root {
+        overscroll-behavior: none;
+    }
 }
 
 :root {
