@@ -236,18 +236,19 @@ function ReplaceProjectDialog({open}: {open: Signal<boolean>}) {
                         </label>
                     </RadioGroup>
                 </div>
-                {source.value == "scratch" ?
+                {source.value == "scratch" ? (
                     <Input
                         type="url"
                         placeholder="https://scratch.mit.edu/projects/314159265/"
                         value={scratchUrl.value}
                         onChange={(event) => (scratchUrl.value = event.target.value)}
                     />
-                :   <UploadBox
+                ) : (
+                    <UploadBox
                         file={file}
                         accept="application/zip,application/x.scratch.sb3,.zip,.sb3"
                     />
-                }
+                )}
                 <DialogFooter>
                     <Button
                         variant="destructive"
@@ -517,9 +518,9 @@ export function AppMenubar({
                             }
                         }}
                     >
-                        {livecodingMode.value ?
-                            "Disable Livecoding Mode"
-                        :   "Enable Livecoding Mode"}
+                        {livecodingMode.value
+                            ? "Disable Livecoding Mode"
+                            : "Enable Livecoding Mode"}
                     </MenubarItem>
                 </MenubarContent>
             </MenubarMenu>

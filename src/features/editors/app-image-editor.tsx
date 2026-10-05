@@ -23,7 +23,7 @@ export function AppImageEditor() {
             {objectURL && (
                 <img
                     src={objectURL}
-                    className="absolute top-[50%] left-[50%] h-full w-full -translate-x-[50%] -translate-y-[50%] object-contain"
+                    className="absolute top-[50%] left-[50%] h-full w-full translate-x-[-50%] translate-y-[-50%] object-contain"
                     onLoad={(event) => {
                         if (event.target instanceof HTMLImageElement) {
                             setDimensions({

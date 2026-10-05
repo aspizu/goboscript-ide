@@ -1,0 +1,21 @@
+{
+    "$schema": "./node_modules/oxfmt/configuration_schema.json",
+    "tabWidth": 4,
+    "semi": false,
+    "bracketSpacing": false,
+    "endOfLine": "lf",
+    "printWidth": 88,
+    "trailingComma": "none",
+    "sortPackageJson": false,
+    "sortTailwindcss": {
+        "functions": ["cn"]
+    },
+    "ignorePatterns": [
+        "pnpm-lock.yaml",
+        "dist/",
+        "goboscript/",
+        "sb2gs/",
+        "node_modules/",
+        "src/components/ui/"
+    ]
+}

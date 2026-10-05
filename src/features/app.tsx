@@ -1,14 +1,14 @@
-import { SidebarProvider } from "@/components/ui/sidebar"
-import { Toaster } from "@/components/ui/sonner"
-import { AppEditor } from "@/features/app-editor"
-import { AppHeader } from "@/features/app-header"
-import { AppPanel } from "@/features/app-panel"
-import { AppSidebar } from "@/features/app-sidebar"
+import {SidebarProvider} from "@/components/ui/sidebar"
+import {Toaster} from "@/components/ui/sonner"
+import {AppEditor} from "@/features/app-editor"
+import {AppHeader} from "@/features/app-header"
+import {AppPanel} from "@/features/app-panel"
+import {AppSidebar} from "@/features/app-sidebar"
 import {hotReload} from "@/lib/hot-reload"
 import {cn, sleep} from "@/lib/utils"
-import { livecodingMode, panelOpen, Project } from "@/state"
-import { useSignal } from "@preact/signals-react"
-import { useCallback, useEffect } from "react"
+import {livecodingMode, panelOpen, Project} from "@/state"
+import {useSignal} from "@preact/signals-react"
+import {useCallback, useEffect} from "react"
 
 const minimumRunLoadingMs = 300
 
@@ -95,9 +95,9 @@ export function App() {
                 <div
                     className={cn(
                         "grid grow overflow-hidden transition-all duration-200 ease-linear",
-                        panelOpen.value ?
-                            "grid-cols-[auto_calc(480px+var(--spacing)*2)]"
-                        :   "grid-cols-[auto_0px]"
+                        panelOpen.value
+                            ? "grid-cols-[auto_calc(480px+var(--spacing)*2)]"
+                            : "grid-cols-[auto_0px]"
                     )}
                 >
                     <AppEditor />

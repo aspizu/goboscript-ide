@@ -39,9 +39,9 @@ export function UploadBox({
             className={cn(
                 "border-input flex h-9 w-full min-w-0 items-center rounded-md border border-dashed bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none md:text-sm",
                 "focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px]",
-                file.value ?
-                    "border-primary bg-primary/10"
-                :   "border-muted-foreground/50 hover:border-muted-foreground/80",
+                file.value
+                    ? "border-primary bg-primary/10"
+                    : "border-muted-foreground/50 hover:border-muted-foreground/80",
                 className
             )}
             onDrop={handleDrop}

@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button"
-import { SidebarTrigger } from "@/components/ui/sidebar"
-import { Spinner } from "@/components/ui/spinner"
-import { AppMenubar } from "@/features/app-menubar"
-import { panelOpen, playerFullscreen, Project } from "@/state"
+import {Button} from "@/components/ui/button"
+import {SidebarTrigger} from "@/components/ui/sidebar"
+import {Spinner} from "@/components/ui/spinner"
+import {AppMenubar} from "@/features/app-menubar"
+import {panelOpen, playerFullscreen, Project} from "@/state"
 import {
     CornerDownLeftIcon,
     FlagIcon,
@@ -27,7 +27,7 @@ export function AppHeader(props: _AppHeaderProps) {
                 projectPanelShortcut={props.projectPanelShortcut}
                 runShortcut={props.runShortcut}
             />
-            <div className="flex w-[480px] gap-2">
+            <div className="flex w-120 gap-2">
                 <Button
                     className="h-7 px-2.5 has-[>svg]:px-2.5"
                     onClick={() => {
@@ -36,12 +36,14 @@ export function AppHeader(props: _AppHeaderProps) {
                     disabled={props.loading}
                 >
                     <span>Run</span>
-                    {props.loading ?
+                    {props.loading ? (
                         <Spinner
                             size="small"
                             className="text-primary-foreground size-4"
                         />
-                    :   <CornerDownLeftIcon />}
+                    ) : (
+                        <CornerDownLeftIcon />
+                    )}
                 </Button>
                 <Button
                     size="icon"

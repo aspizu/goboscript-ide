@@ -79,8 +79,9 @@ function RenameDialog({
         const openFile = Editor.getOpenFile()
         if (isDirectory) {
             const oldDir = path.endsWith("/") ? path : `${path}/`
-            const newDir =
-                newPath.value.endsWith("/") ? newPath.value : `${newPath.value}/`
+            const newDir = newPath.value.endsWith("/")
+                ? newPath.value
+                : `${newPath.value}/`
             FS.renameDirectory(path, newPath.value)
             if (openFile?.startsWith(oldDir)) {
                 Editor.setOpenFile(newDir + openFile.slice(oldDir.length))
@@ -165,8 +166,9 @@ function EntryContextMenu({
     children: React.ReactNode
 }) {
     async function onSave(as: boolean) {
-        const file =
-            isDirectory ? await FS.getDirectoryAsZip(path) : FS.getFileBlob(path)
+        const file = isDirectory
+            ? await FS.getDirectoryAsZip(path)
+            : FS.getFileBlob(path)
         if (!file) return
         const fileName = pathlib.basename(path)
         if (as && SUPPORTS_TRUE_SAVE_AS) {
@@ -244,9 +246,7 @@ function EntryContextMenu({
                         Replace...
                     </ContextMenuItem>
                 )}
-                <ContextMenuItem
-                    onSelect={() => (isDeleteDialogOpen.value = true)}
-                >
+                <ContextMenuItem onSelect={() => (isDeleteDialogOpen.value = true)}>
                     Delete...
                 </ContextMenuItem>
             </ContextMenuContent>
