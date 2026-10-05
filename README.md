@@ -21,7 +21,7 @@ Pull Requests are appreciated.
 Clone the repository and build goboscript using `wasm-pack`.
 
 ```shell
-git clone https://github.com/aspizu/goboscript # or symlink repo to ./goboscript/
+git clone https://github.com/aspizu/goboscript # or symlink to a local clone
 cd goboscript
 wasm-pack build --release
 cd ..
