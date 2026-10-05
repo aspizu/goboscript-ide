@@ -4,8 +4,9 @@ import { AppEditor } from "@/features/app-editor"
 import { AppHeader } from "@/features/app-header"
 import { AppPanel } from "@/features/app-panel"
 import { AppSidebar } from "@/features/app-sidebar"
+import {hotReload} from "@/lib/hot-reload"
 import {cn, sleep} from "@/lib/utils"
-import { panelOpen, Project } from "@/state"
+import { livecodingMode, panelOpen, Project } from "@/state"
 import { useSignal } from "@preact/signals-react"
 import { useCallback, useEffect } from "react"
 
@@ -39,8 +40,15 @@ export function App() {
             await Project.buildProject()
             const project = Project.getProject()
             if (!project) return
-            await Project.scaffolding.loadProject(project)
-            Project.scaffolding.greenFlag()
+            if (
+                livecodingMode.value &&
+                Project.scaffolding.vm.runtime.targets.length > 0
+            ) {
+                await hotReload(Project.scaffolding.vm, project)
+            } else {
+                await Project.scaffolding.loadProject(project)
+                Project.scaffolding.greenFlag()
+            }
         } catch (error) {
             console.error(error)
         } finally {

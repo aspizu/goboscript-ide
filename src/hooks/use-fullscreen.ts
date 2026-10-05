@@ -1,24 +1,30 @@
 import {Signal, useSignalEffect} from "@preact/signals-react"
-import {useEffect, type RefObject} from "react"
+import {useEffect, useEffectEvent} from "react"
 
 export function useFullscreen(
     state: Signal<boolean>,
-    ref: RefObject<HTMLElement | null>
+    getElement: () => HTMLElement | null
 ) {
     useSignalEffect(() => {
+        const element = getElement()
         if (state.value) {
-            ref.current?.requestFullscreen().catch(() => {})
-        } else {
+            if (element && document.fullscreenElement !== element) {
+                element.requestFullscreen().catch(() => {
+                    state.value = false
+                })
+            }
+        } else if (document.fullscreenElement) {
             document.exitFullscreen().catch(() => {})
         }
     })
+    const listener = useEffectEvent(() => {
+        const element = getElement()
+        state.value = !!element && document.fullscreenElement === element
+    })
     useEffect(() => {
-        function listener() {
-            state.value = document.fullscreenElement === ref.current
-        }
         document.addEventListener("fullscreenchange", listener)
         return () => {
             document.removeEventListener("fullscreenchange", listener)
         }
-    }, [ref, state])
+    }, [])
 }

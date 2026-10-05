@@ -14,7 +14,12 @@ export function AppImageEditor() {
     const objectURL = useObjectURL(file instanceof Blob ? file : null)
     const [dimensions, setDimensions] = useState<{x: number; y: number} | null>(null)
     return (
-        <div className={cn("relative grow overflow-hidden", !isEditable && "hidden")}>
+        <div
+            className={cn(
+                "relative grow overflow-hidden bg-[#1e1e1e]",
+                !isEditable && "hidden"
+            )}
+        >
             {objectURL && (
                 <img
                     src={objectURL}

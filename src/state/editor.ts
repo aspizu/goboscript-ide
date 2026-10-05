@@ -4,7 +4,7 @@
 
 import {localsignal} from "@/lib/localsignal"
 import * as syntax from "@/lib/syntax"
-import type {useMonaco} from "@monaco-editor/react"
+import type {Monaco, useMonaco} from "@monaco-editor/react"
 import type {Signal} from "@preact/signals-react"
 import {signal} from "@preact/signals-react"
 import * as $monaco from "monaco-editor"
@@ -28,8 +28,25 @@ export function close() {
     openFile.value = undefined
 }
 
+export function onBeforeMount($monaco: Monaco) {
+    syntax.register($monaco)
+    const theme: $monaco.editor.IStandaloneThemeData = {
+        base: "vs-dark",
+        inherit: true,
+        rules: [{token: "support.function.builtin.goboscript", foreground: "DCDCAA"}],
+        colors: {}
+    }
+    $monaco.editor.defineTheme("goboscript-dark", theme)
+    $monaco.editor.defineTheme("livecoding", {
+        ...theme,
+        colors: {
+            "editor.background": "#00000000",
+            "editorGutter.background": "#00000000"
+        }
+    })
+}
+
 export function onMount($editor: any, $monaco: any) {
     editor.value = $editor
     monaco.value = $monaco
-    syntax.register($monaco)
 }
