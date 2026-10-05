@@ -294,7 +294,7 @@ export function AppMenubar({
         <Menubar className="grow">
             <MenubarMenu>
                 <MenubarTrigger>File</MenubarTrigger>
-                <MenubarContent className="min-w-[14rem]">
+                <MenubarContent className="min-w-56">
                     <MenubarItem
                         onSelect={() => {
                             void onNewFile()
@@ -372,7 +372,7 @@ export function AppMenubar({
             </MenubarMenu>
             <MenubarMenu>
                 <MenubarTrigger>Edit</MenubarTrigger>
-                <MenubarContent className="min-w-[14rem]">
+                <MenubarContent className="min-w-56">
                     <MenubarItem
                         onSelect={() =>
                             dispatchEditorShortcut({
@@ -476,7 +476,7 @@ export function AppMenubar({
             </MenubarMenu>
             <MenubarMenu>
                 <MenubarTrigger>View</MenubarTrigger>
-                <MenubarContent className="min-w-[14rem]">
+                <MenubarContent className="min-w-56">
                     <MenubarItem onSelect={toggleSidebar}>
                         {sidebarState == "expanded" ? "Hide Sidebar" : "Show Sidebar"}
                         <MenubarShortcut>⌘B</MenubarShortcut>
@@ -526,7 +526,7 @@ export function AppMenubar({
             </MenubarMenu>
             <MenubarMenu>
                 <MenubarTrigger>Project</MenubarTrigger>
-                <MenubarContent className="min-w-[14rem]">
+                <MenubarContent className="min-w-56">
                     <MenubarItem
                         onSelect={() => {
                             void Project.buildProject()
@@ -549,7 +549,7 @@ export function AppMenubar({
             </MenubarMenu>
             <MenubarMenu>
                 <MenubarTrigger>Help</MenubarTrigger>
-                <MenubarContent className="min-w-[14rem]">
+                <MenubarContent className="min-w-56">
                     <MenubarItem asChild>
                         <a
                             href="https://aspiz.uk/goboscript/docs/getting-started/basic-examples.html"
