@@ -14,7 +14,7 @@ export function AppSoundEditor() {
     return (
         <div
             className={cn(
-                "grid grow place-items-center bg-[#1e1e1e] p-6",
+                "grid grow place-items-center rounded-md bg-[#1e1e1e] p-7",
                 !isEditable && "hidden"
             )}
         >

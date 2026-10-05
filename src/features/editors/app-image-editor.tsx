@@ -16,7 +16,7 @@ export function AppImageEditor() {
     return (
         <div
             className={cn(
-                "relative grow overflow-hidden bg-[#1e1e1e]",
+                "relative grow overflow-hidden rounded-md bg-[#1e1e1e] p-1",
                 !isEditable && "hidden"
             )}
         >
@@ -35,7 +35,7 @@ export function AppImageEditor() {
                 />
             )}
             {dimensions && (
-                <div className="absolute right-0.25 bottom-0.25 rounded-md bg-black px-1 text-sm font-medium">
+                <div className="absolute right-1 bottom-1 rounded-md bg-black px-1 text-sm font-medium">
                     {dimensions.x}x{dimensions.y}
                 </div>
             )}
