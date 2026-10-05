@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -134,8 +133,8 @@
 }
 
 @theme {
-    --font-sans: "Inter Variable";
-    --font-mono: "Cascadia Code";
+    --font-sans: "Comic Neue";
+    --font-mono: "Comic Mono";
 }
 
 .pixelated {
@@ -143,16 +142,17 @@
 }
 
 .livecoding-editor .monaco-editor .view-lines {
+    --text-shadow-color: black;
+    --text-shadow-blur: 0.5px;
     text-shadow:
-        -2px 0 #000,
-        2px 0 #000,
-        0 -2px #000,
-        0 2px #000,
-        -1.5px -1.5px #000,
-        1.5px -1.5px #000,
-        -1.5px 1.5px #000,
-        1.5px 1.5px #000,
-        0 0 6px #000;
+        1px 0 var(--text-shadow-blur) var(--text-shadow-color),
+        0.71px 0.71px var(--text-shadow-blur) var(--text-shadow-color),
+        0 1px var(--text-shadow-blur) var(--text-shadow-color),
+        -0.71px 0.71px var(--text-shadow-blur) var(--text-shadow-color),
+        -1px 0 var(--text-shadow-blur) var(--text-shadow-color),
+        -0.71px -0.71px var(--text-shadow-blur) var(--text-shadow-color),
+        0 -1px var(--text-shadow-blur) var(--text-shadow-color),
+        0.71px -0.71px var(--text-shadow-blur) var(--text-shadow-color);
 }
 
 @keyframes menu-item-blink {

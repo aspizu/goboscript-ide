@@ -1,7 +1,7 @@
-// @ts-expect-error Types don't exist
-import "@fontsource-variable/inter"
-// @ts-expect-error Types don't exist
-import "@fontsource/cascadia-code"
+import "@fontsource/comic-neue/400.css"
+import "@fontsource/comic-neue/700.css"
+import "@fontsource/comic-mono/400.css"
+import "@fontsource/comic-mono/700.css"
 
 import "@/styles/index.css"
 

@@ -5,7 +5,7 @@ import {localsignal} from "@/lib/localsignal"
 import {Console, FS} from "@/state"
 import {monaco} from "@/state/editor"
 import {batch} from "@preact/signals-react"
-import {Scaffolding} from "@turbowarp/scaffolding"
+import {Scaffolding} from "@turbowarp/scaffolding/with-music"
 import * as goboscript from "goboscript"
 import {MarkerSeverity} from "monaco-editor"
 

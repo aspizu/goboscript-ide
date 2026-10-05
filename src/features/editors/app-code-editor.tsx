@@ -5,7 +5,7 @@ import {Editor as MonacoEditor, type EditorProps} from "@monaco-editor/react"
 import * as $monaco from "monaco-editor"
 
 const options: $monaco.editor.IStandaloneEditorConstructionOptions = {
-    fontFamily: "Cascadia Code",
+    fontFamily: "Comic Mono",
     fontSize: 12,
     fontLigatures: true,
     minimap: {enabled: false},
