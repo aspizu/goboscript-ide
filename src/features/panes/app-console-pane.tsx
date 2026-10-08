@@ -46,7 +46,7 @@ function Message({severity, message, path, lineNumber}: Console.Message) {
     )
 }
 
-export function AppConsolePane() {
+export function AppConsolePane({hidden}: {hidden: boolean}) {
     const ref = useRef<HTMLDivElement>(null)
     const messages = Console.getMessages()
     useLayoutEffect(() => {
@@ -54,7 +54,11 @@ export function AppConsolePane() {
         ref.current.scrollTo({top: ref.current.scrollHeight, behavior: "smooth"})
     }, [messages])
     return (
-        <div className="flex flex-col gap-1 overflow-y-scroll" ref={ref}>
+        <div
+            hidden={hidden}
+            className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-scroll"
+            ref={ref}
+        >
             <div className="flex flex-col gap-1">
                 {messages.map((message, i) => (
                     <Message key={i} {...message} />
